@@ -1,0 +1,55 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.banner{
+    width: 100%;
+    background: url('/public/vivid-blurred-colorful-wallpaper-background_58702-2461.avif');
+    background-size: cover;
+    border-bottom-right-radius: 300px;
+    border-top-left-radius: 300px;
+    justify-content: center;
+    display: flex;
+}
+
+.banner h2{
+    margin-top: 20px;
+    font-size: 3rem;
+    color: #ffffff;
+    background: url('/public/HD-wallpaper-purple-blue-bubbles-gradient-blue-bubbles-colors-purple.jpg') center;
+    background-size: cover;
+    background-clip: Text;
+    color: transparent;
+    animation: animate 10s linear infinite;
+}
+
+@keyframes animate {
+    to {
+        background-position-x: -200px
+    }
+}
+
+.bgtext img {
+    width: 200px;
+    height: 200px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-size: cover;
+    color: transparent;
+}
+
+.load {
+    margin-top: 20px;
+    width: 330px;
+    height: 54px;
+    background-color: #FE2204;
+    color: #ffffff;
+    font-size: 20px;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}

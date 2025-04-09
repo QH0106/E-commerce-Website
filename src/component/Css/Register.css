@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary: #a4070c;
+    --secondary: #320f0f;
+    --accent: #064141;
+}
+
+.backgroundRegister {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+.form-register {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    width: 410px;
+    height: 677px;
+    border-radius: 30px;
+    margin-top: 20px;
+    box-shadow: 0 1px 50px var(--accent);
+    background: transparent;
+    backdrop-filter: blur(20px);
+    color: #000;
+}
+
+.form-register h2{ 
+    text-align: center;
+    margin: 2.5rem;
+    color: #000000;
+    font-weight: 600;
+}
+
+.form-register label {
+    display: block;
+    color: rgb(0, 0, 0);
+    left: 50%;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.group {
+    margin: 18px 0 18px 25%;
+}
+
+.group i {
+    cursor: pointer;
+    margin-left: -30px;
+    color: #000;
+}
+
+.message {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.form-register input {
+    width: 75%;
+    padding: 12px 15px;
+    border: none;
+    background: white;
+    color: #000;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+    border: 1px solid #000;
+}
+
+.form-login input:focus {
+    box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.618);
+}
+
+.forgot-password {
+    text-align: right;
+    margin: 10px 20% 20px 0;
+}
+
+.forgot-password a {
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    text-decoration: none;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.forgot-password a:hover {
+    color: var(--primary);;
+}
+
+button {
+    width: 56%;
+    margin-left: 25%;
+    margin-top: 36px;
+    background: #ffffff;
+    border-radius: 10px;   
+    border: 1px solid #000;
+}
+
+.text {
+    color: rgb(0, 0, 0);
+    text-align: center;
+}
+
+
+.Login {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    margin-left: 15px;
+    margin-top: 36px;
+}
+
+.Login a {
+    color: #000000;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 5px;
+}
