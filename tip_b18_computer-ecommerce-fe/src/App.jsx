@@ -9,13 +9,14 @@ import Admin from "./component/Admins/Admin";
 import ProductManagement from "./component/Admins/ProductManagement";
 import Detail from "./component/Pages/Detail"
 import Cart from "./component/Pages/Cart"
+import ProfilePage from "./component/Pages/ProfilePage"
 
 
 function App() {
   return (
     <div className="home">
       <Routes>
-        <Route path="/" element={< Cart/>} />
+        <Route path="/" element={< ProfilePage/>} />
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/ProDuct" element={<ProDuct />} />
         <Route path="/login" element={<Login />} />
@@ -23,6 +24,7 @@ function App() {
         <Route path="/Forgotpassword" element={<Forgotpassword />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Cart" element={<Cart />} />
+        <Route path="/ProfilePage" element={<ProfilePage />} />
       </Routes>
     </div>
   );

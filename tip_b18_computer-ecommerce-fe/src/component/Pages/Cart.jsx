@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Image, InputGroup } from "react-bootstrap";
 
-// Dữ liệu giỏ hàng ban đầu
 const initialCart = [
   {
     id: 1,
@@ -24,10 +23,7 @@ const initialCart = [
   },
 ];
 
-
-
 const CartPage = () => {
-  // Khai báo state cho giỏ hàng và thông tin khách hàng
   const [cart, setCart] = useState(initialCart);
   const [customer, setCustomer] = useState({ name: "", phone: "", address: "" });
   const navigate = useNavigate();
@@ -64,11 +60,11 @@ const CartPage = () => {
 
   // Tính tổng tiền của giỏ hàng (chỉ tính các sản phẩm đã chọn)
   const total = cart
-    .filter((item) => item.selected) // Chỉ lọc các sản phẩm được chọn
-    .reduce((sum, item) => sum + item.price * item.quantity, 0); // Tính tổng tiền
+    .filter((item) => item.selected) // lọc sp được chọn
+    .reduce((sum, item) => sum + item.price * item.quantity, 0); // tổng tiền
 
     const handleBuy = () => {
-      navigate('/HomePage');
+            navigate('/HomePage');
     };
 
   return (
