@@ -22,6 +22,7 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/Forgotpassword" element={<Forgotpassword />} />
         <Route path="/Admin" element={<Admin />} />
+        <Route path="/Cart" element={<Cart />} />
       </Routes>
     </div>
   );

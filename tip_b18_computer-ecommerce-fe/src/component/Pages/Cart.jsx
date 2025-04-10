@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import {Container,Row,Col,Form,Button,Image,InputGroup,} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Container, Row, Col, Form, Button, Image, InputGroup } from "react-bootstrap";
 
+// Dữ liệu giỏ hàng ban đầu
 const initialCart = [
   {
     id: 1,
@@ -9,7 +11,7 @@ const initialCart = [
     oldPrice: 25210000,
     image: "/public/image-2.png",
     quantity: 1,
-    selected: false,
+    selected: false, // Mặc định sản phẩm này chưa được chọn
   },
   {
     id: 2,
@@ -18,24 +20,30 @@ const initialCart = [
     oldPrice: 25210000,
     image: "/public/image-1.png",
     quantity: 1,
-    selected: true,
+    selected: false, 
   },
 ];
 
+
+
 const CartPage = () => {
+  // Khai báo state cho giỏ hàng và thông tin khách hàng
   const [cart, setCart] = useState(initialCart);
   const [customer, setCustomer] = useState({ name: "", phone: "", address: "" });
+  const navigate = useNavigate();
 
+  // Hàm xử lý thay đổi số lượng sản phẩm trong giỏ
   const handleQuantityChange = (id, delta) => {
     setCart(
       cart.map((item) =>
         item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+          ? { ...item, quantity: Math.max(1, item.quantity + delta) } // Đảm bảo số lượng không nhỏ hơn 1
           : item
       )
     );
   };
 
+  // Hàm xử lý việc chọn hoặc bỏ chọn sản phẩm
   const handleSelectItem = (id) => {
     setCart(
       cart.map((item) =>
@@ -44,53 +52,66 @@ const CartPage = () => {
     );
   };
 
+  // Hàm xử lý xóa sản phẩm khỏi giỏ hàng
   const handleRemoveItem = (id) => {
     setCart(cart.filter((item) => item.id !== id));
   };
 
+  // Hàm chọn hoặc bỏ chọn tất cả sản phẩm trong giỏ
   const handleSelectAll = (checked) => {
     setCart(cart.map((item) => ({ ...item, selected: checked })));
   };
 
+  // Tính tổng tiền của giỏ hàng (chỉ tính các sản phẩm đã chọn)
   const total = cart
-    .filter((item) => item.selected)
-    .reduce((sum, item) => sum + item.price * item.quantity, 0);
+    .filter((item) => item.selected) // Chỉ lọc các sản phẩm được chọn
+    .reduce((sum, item) => sum + item.price * item.quantity, 0); // Tính tổng tiền
+
+    const handleBuy = () => {
+      navigate('/HomePage');
+    };
 
   return (
     <Container className="py-5">
       <Row>
         <Col md={8}>
           <h5> Xem thêm sản phẩm khác</h5>
+          {/* Checkbox chọn tất cả */}
           <Form.Check
             type="checkbox"
             label="Chọn tất cả"
             className="my-3"
-            onChange={(e) => handleSelectAll(e.target.checked)}
+            onChange={(e) => handleSelectAll(e.target.checked)} // Gọi hàm chọn tất cả khi checkbox thay đổi
           />
+          {/* Duyệt qua tất cả sản phẩm trong giỏ */}
           {cart.map((item) => (
             <Row key={item.id} className="align-items-center border-top py-3">
               <Col xs={1}>
+                {/* Checkbox chọn sản phẩm */}
                 <Form.Check
                   type="checkbox"
                   checked={item.selected}
-                  onChange={() => handleSelectItem(item.id)}
+                  onChange={() => handleSelectItem(item.id)} // Xử lý khi checkbox thay đổi
                 />
               </Col>
               <Col xs={2}>
+                {/* Hình ảnh sản phẩm */}
                 <Image src={item.image} thumbnail />
               </Col>
               <Col xs={5}>{item.name}</Col>
               <Col xs={2}>
+                {/* Giá sản phẩm và giá cũ */}
                 <div className="text-danger fw-bold">{item.price.toLocaleString()}₫</div>
                 <div>
                   <del>{item.oldPrice.toLocaleString()}₫</del> -7%
                 </div>
               </Col>
               <Col xs={1}>
+                {/* Điều chỉnh số lượng sản phẩm */}
                 <InputGroup size="sm">
                   <Button
                     variant="outline-secondary"
-                    onClick={() => handleQuantityChange(item.id, -1)}
+                    onClick={() => handleQuantityChange(item.id, -1)} // Giảm số lượng
                   >
                     -
                   </Button>
@@ -101,17 +122,18 @@ const CartPage = () => {
                   />
                   <Button
                     variant="outline-secondary"
-                    onClick={() => handleQuantityChange(item.id, 1)}
+                    onClick={() => handleQuantityChange(item.id, 1)} // Tăng số lượng
                   >
                     +
                   </Button>
                 </InputGroup>
               </Col>
               <Col xs={1}>
+                {/* Nút xóa sản phẩm */}
                 <Button
                   variant="link"
                   className="text-danger"
-                  onClick={() => handleRemoveItem(item.id)}
+                  onClick={() => handleRemoveItem(item.id)} // Xử lý khi xóa sản phẩm
                 >
                   🗑
                 </Button>
@@ -122,29 +144,30 @@ const CartPage = () => {
 
         <Col md={4} className="border p-3">
           <h6>Thông tin khách hàng</h6>
+          {/* Các trường nhập liệu thông tin khách hàng */}
           <Form.Control
             placeholder="Tên Khách Hàng"
             className="mb-2"
-            onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+            onChange={(e) => setCustomer({ ...customer, name: e.target.value })} // Cập nhật tên khách hàng
           />
           <Form.Control
             placeholder="Số Điện Thoại"
             className="mb-2"
-            onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
+            onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} // Cập nhật số điện thoại
           />
           <Form.Control
             as="textarea"
             rows={2}
             placeholder="Địa Chỉ Nhận Hàng"
             className="mb-3"
-            onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
+            onChange={(e) => setCustomer({ ...customer, address: e.target.value })} // Cập nhật địa chỉ
           />
 
           <h6>Thông Tin Đơn Hàng</h6>
           <p>Phí Vận Chuyển: Miễn Phí</p>
-          <p>Tổng Tiền: {total.toLocaleString()}₫</p>
-          <Button variant="danger" className="w-100">
-            Mua
+          <p>Tổng Tiền: {total.toLocaleString()}₫</p> {/* Hiển thị tổng tiền */}
+          <Button variant="danger" className="w-100" onClick={handleBuy}>
+            Thanh Toán
           </Button>
         </Col>
       </Row>

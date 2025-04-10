@@ -128,7 +128,7 @@ const handleSearch = (e) => {
               </form>
             </div>
     
-              <a href="#">
+              <a href="/Cart">
                 <i className="fa-solid fa-cart-shopping" style={{fontSize: "20px"}}></i>
                 {cart.length > 0 && <span>{cart.length}</span>}
               </a>
