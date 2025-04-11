@@ -109,14 +109,14 @@ const ProductManagement = () => {
               <Form.Label>description</Form.Label>
               <Form.Control
                 type="text"
-                value={currentProduct.price}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, price: e.target.value })}
+                value={currentProduct.description}
+                onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
               />
             </Form.Group><Form.Group controlId="productbrand">
               <Form.Label>Hãng</Form.Label>
               <Form.Control
                 type="text"
-                value={currentProduct.price}
+                value={currentProduct.brand}
                 onChange={(e) => setCurrentProduct({ ...currentProduct, brand: e.target.value })}
               />
             </Form.Group><Form.Group controlId="productPrice">

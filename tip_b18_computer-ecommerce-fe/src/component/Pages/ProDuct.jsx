@@ -17,10 +17,8 @@ const products = [
 
 const ProDuct = () => {
   const [cart, setCart] = useState([]);
-  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("price");
-  const [suggestions, setSuggestions] = useState([]);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
@@ -31,18 +29,6 @@ const ProDuct = () => {
     .filter((p) => (filter === "All" ? true : p.category === filter))
     // .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => (sort === "price" ? a.price - b.price : b.rating - a.rating));
-
-    const handleSearch = (e) => {
-      const value = e.target.value.toLowerCase();
-      setSearch(value);
-    
-      if (value === "") {
-        setSuggestions([]); // Không hiển thị gợi ý nếu không nhập gì
-      } else {
-        const filtered = products.filter((p) => p.name.toLowerCase().includes(value));
-        setSuggestions(filtered);
-      }
-    };
     
   return (
     <div className="PageHm">

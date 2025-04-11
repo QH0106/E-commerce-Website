@@ -72,7 +72,7 @@ const addToCart = (product) => {
         {/* Danh sách sản phẩm */}
         <div>
           <div className="container mt-3">
-            <h2 style={{color:"#000", }}>Sản Phẩm nổi bật</h2>
+            <h2 style={{color:"#000", }}>Sản phẩm nổi bật</h2>
             <div className="row">
               {products.slice(0, 4).map((product) => (
                 <div key={product.name} className="col-md-3">
@@ -96,7 +96,7 @@ const addToCart = (product) => {
 
         <div>
           <div className="container mt-3">
-            <h2 style={{color:"#000", }}>Sản Phẩm khuyến mãi</h2>
+            <h2 style={{color:"#000", }}>Sản phẩm khuyến mãi</h2>
             <div className="row">
               {products.slice(0, 5).map((product) => (
                 <div key={product.name} className="col-md-3">

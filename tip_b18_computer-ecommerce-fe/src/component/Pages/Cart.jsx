@@ -1,32 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Image, InputGroup } from "react-bootstrap";
-
-const initialCart = [
-  {
-    id: 1,
-    name: "PC GVN AMD R5-8400F/ VGA RX 7600 (Powered by ASUS)",
-    price: 23390000,
-    oldPrice: 25210000,
-    image: "/public/image-2.png",
-    quantity: 1,
-    selected: false, // Mặc định sản phẩm này chưa được chọn
-  },
-  {
-    id: 2,
-    name: "PC GVN Intel i3-12100F/ VGA RX 6500XT (Powered by ASUS)",
-    price: 23390000,
-    oldPrice: 25210000,
-    image: "/public/image-1.png",
-    quantity: 1,
-    selected: false, 
-  },
-];
+import axios from "axios"; // Thêm axios vào
 
 const CartPage = () => {
-  const [cart, setCart] = useState(initialCart);
+  const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({ name: "", phone: "", address: "" });
+  const [loading, setLoading] = useState(true); // Thêm loading để quản lý trạng thái tải
   const navigate = useNavigate();
+
+  // Gọi API để lấy giỏ hàng khi component được mount
+  useEffect(() => {
+    // Thực hiện gọi API để lấy giỏ hàng
+    axios
+      .get("http://192.168.199.43:8080/api/carts/getCartByUserId/{userId}")
+      .then((response) => {
+        setCart(response.data); // Cập nhật giỏ hàng từ API
+        setLoading(false); 
+      })
+      .catch((error) => {
+        console.error("Có lỗi xảy ra khi lấy giỏ hàng", error);
+        setLoading(false); 
+      });
+  }, []);
 
   // Hàm xử lý thay đổi số lượng sản phẩm trong giỏ
   const handleQuantityChange = (id, delta) => {
@@ -63,9 +59,41 @@ const CartPage = () => {
     .filter((item) => item.selected) // lọc sp được chọn
     .reduce((sum, item) => sum + item.price * item.quantity, 0); // tổng tiền
 
-    const handleBuy = () => {
-            navigate('/HomePage');
+  // Hàm xử lý thanh toán (gọi API bằng axios)
+  const handleBuy = () => {
+    const orderData = {
+      id: "unique-order-id",  // ID đơn hàng (có thể tự tạo hoặc lấy từ auth)
+      cart: cart
+        .filter(item => item.selected)  // Lọc các sản phẩm đã chọn
+        .map(item => ({
+          productId: item.id,
+          nameProduct: item.name,
+          thumbnail: item.image,
+          quantity: item.quantity,
+          unitPrice: item.price,
+          totalPrice: item.price * item.quantity,
+        })),
+      totalPrice: total,  // Tổng tiền giỏ hàng
     };
+
+    const apiUrl = "/"; // URL API thanh toán
+
+    // Gọi API với axios
+    axios
+      .post(apiUrl, orderData) // Gọi API thanh toán
+      .then((response) => {
+        console.log("Thanh toán thành công", response.data);
+        navigate('/HomePage'); // Điều hướng sau khi thanh toán thành công
+      })
+      .catch((error) => {
+        console.error("Có lỗi xảy ra khi thanh toán", error);
+      });
+  };
+
+  // Nếu đang tải dữ liệu thì hiển thị thông báo loading
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container className="py-5">

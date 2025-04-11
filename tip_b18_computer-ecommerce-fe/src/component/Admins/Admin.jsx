@@ -11,7 +11,7 @@ const Sidebar = () => (
     <h4 className="mb-4">Admin Panel</h4>
     <ul className="nav flex-column">
       <li className="nav-item"><Link className="nav-link text-white" to="/">Dashboard</Link></li>
-      <li className="nav-item"><Link className="nav-link text-white" to="/products">Sản phẩm</Link></li>
+      <li className="nav-item"><Link className="nav-link text-white" to="/ProductManagement">Sản phẩm</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/users">Người dùng</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/categories">Danh mục</Link></li>
       <li className="nav-item mt-auto"><LogoutButton /></li>

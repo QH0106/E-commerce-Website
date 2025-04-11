@@ -60,7 +60,6 @@ const handleSearch = (e) => {
         <nav className="navbar navbar-expand-sm">
           <div className="container">
             <a className="brand" href="/HomePage">Logo</a>
-            
             <div className="collapse navbar-collapse" id="mynavbar">
               <ul className="navbar-nav me-auto">
                 <li className="nav-item">
@@ -112,16 +111,18 @@ const handleSearch = (e) => {
               )}
               </form>
             </div>
-    
+            
               <a href="/Cart">
                 <i className="fa-solid fa-cart-shopping" style={{fontSize: "20px"}}></i>
                 {cart.length > 0 && <span>{cart.length}</span>}
               </a>
 
+              <a href="/Admin">Admin</a>
+
               {Isloggin ? (
                 <span style={{color:"white"}}>
                   <i className="fa-regular fa-user" style={{fontSize: "20px", marginRight: "10px"}}></i>
-                  Xin chào, {username}<span onClick={handleLogout} style={{cursor:"pointer", color:"red"}}></span>
+                  Xin chào, {username} | <span onClick={handleLogout} style={{cursor:"pointer", color:"black"}}>Đăng xuất</span>
                 </span>
               ) : (
                 <a href="/Login" style={{cursor:"pointer"}}>

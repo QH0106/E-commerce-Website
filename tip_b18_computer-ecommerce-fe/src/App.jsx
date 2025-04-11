@@ -18,7 +18,7 @@ function App() {
     <div className="home">
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} />  
+          <Route index element={<Cart />} />  
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/ProDuct" element={<ProDuct />} />
           <Route path="/Detail" element={<Detail />} />
