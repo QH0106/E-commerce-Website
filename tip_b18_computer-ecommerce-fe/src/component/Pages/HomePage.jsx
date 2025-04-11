@@ -6,18 +6,13 @@ import "../Css/Homepage.css"
 
 const HomePage = () => {
   const [cart, setCart] = useState([]);
-  const [search, setSearch] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [Isloggin, setIsLogin] = useState(false);
-  const [Islogout, setIsLogout] = useState(false);
-  const [username, setUsername] = useState("");
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
-        setProducts(response.data); //API trả về danh sách sản phẩm
+        setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
       }
@@ -26,120 +21,16 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-
-useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("currentUser"))?.username;
-  
-  if (user) {
-    setUsername(user); // Cập nhật username vào state
-  }}, []);
-
-const addToCart = (product) => {
-    setCart([...cart, product]);
-    alert(`${product.name} đã thêm vào giỏ hàng!`);
-};
-
 // const filteredProducts = products
 
-useEffect(() => {
-  const loggin = localStorage.getItem('currentUser');
-  if(loggin){
-    setIsLogin(true)
-  }else{
-    setIsLogout(true)
-  } 
-}, [])
-
+const addToCart = (product) => {
+  setCart([...cart, product]);
+  alert(`${product.name} đã thêm vào giỏ hàng!`);
+};
    
-const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearch(value);
-  
-    if (value === "") {
-      setSuggestions([]); // Không hiển thị gợi ý
-    } else {
-      const filtered = products.filter((p) => p.name.toLowerCase().includes(value));
-      setSuggestions(filtered);
-    }
-  };
-    
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser')
-  }
-
-
   return (
     <div className="PageHm">
-      {/* Header */}
-        <div className="header">
-        <nav className="navbar navbar-expand-sm">
-          <div className="container">
-            <a className="brand" href="">Logo</a>
-            
-            <div className="collapse navbar-collapse" id="mynavbar">
-              <ul className="navbar-nav me-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="">PC</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="">Laptop</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="">Gear</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-              </ul>
-            
-              <form className="search d-flex">
-              <input
-                type="text"
-                className="form-control me-2"
-                placeholder="Tìm kiếm..."
-                onChange={handleSearch}
-                value={search}
-              />
-              {/* Hiển thị danh sách gợi ý */}
-              {suggestions.length > 0 && (
-                <div className="search-suggestions">
-                  {suggestions.map((item) => (
-                    <div key={item.id} className="suggestion-item">
-                      <a href="/">
-                        <img src={item.image} alt={item.name} width="40" height="40" />
-                        <span>{item.name}</span>
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              )}
-              </form>
-            </div>
-    
-              <a href="/Cart">
-                <i className="fa-solid fa-cart-shopping" style={{fontSize: "20px"}}></i>
-                {cart.length > 0 && <span>{cart.length}</span>}
-              </a>
-              {Isloggin ? <a href="" type="Button" onClick={handleLogout} style={{cursor:"pointer", color:"white", textDecoration:"none"}}><i className="fa-regular fa-user" style={{fontSize: "20px", marginRight: "10px", textDecoration:"none"}} ></i>Xin Chào, {username}</a> : <a href="/Login" style={{cursor:"pointer"}}><i className="fa-solid fa-user" style={{fontSize: "20px", marginRight: "10px"}}></i></a>}  
-              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            </div>
-          </nav>
-        </div>
-
+      {/* Header */} 
       <div className="bannerH">
         {/* slide show */}
         <div className="slideshow">
@@ -185,8 +76,8 @@ const handleSearch = (e) => {
             <div className="row">
               {products.slice(0, 4).map((product) => (
                 <div key={product.name} className="col-md-3">
-                  <div href="" className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
-                    <a href=""><img className="card-img-top" src={product.image} alt="{product.img}" /></a>
+                  <div href="/Detail" className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
+                    <a href="/Detail"><img className="card-img-top" src={product.image} alt="{product.img}" /></a>
                     <h5>{product.name}</h5>
                     <div style={{display: "flex"}}>
                       <p style={{textDecoration: "line-through", color: "#7C7979", marginRight: "10px"  }}>{product.old}</p>
@@ -210,7 +101,7 @@ const handleSearch = (e) => {
               {products.slice(0, 5).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px"}}>
-                    <img className="card-img-top" src={product.image} alt="{product.id}" />
+                    <a href="/Detail"><img className="card-img-top" src={product.image} alt="{product.id}" /></a>
                     <h5>{product.name}</h5>
                     <div style={{display: "flex"}}>
                       <p style={{textDecoration: "line-through", color: "#7C7979", marginRight: "10px"  }}>{product.old}</p>

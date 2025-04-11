@@ -68,7 +68,7 @@ const UserProfilePage = () => {
             style={{ cursor: "pointer" }}
             onClick={() => setKey("orders")}
           >
-            Quản lý đơn hàng
+            Theo dõi đơn hàng
           </div>
           <div className="text-black" style={{ cursor: "pointer" }} onClick={handleLogout}>
             Đăng xuất

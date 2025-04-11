@@ -47,53 +47,7 @@ const ProDuct = () => {
   return (
     <div className="PageHm">
       {/* Header */}
-        <div className="header">
-          <nav className="navbar">
-            {/* <div className="infor">
-            <i class="fa-solid fa-phone"></i><p>0123456789</p>
-            <i class="fa-solid fa-location-dot"></i><p>TP Quy Nhơn</p>
-            </div> */}
-            <a className="brand" href="/HomePage">PC Store</a>
-            <div className="search">
-            <input
-              type="text"
-              className="form-control me-2"
-              placeholder="Tìm kiếm..."
-              onChange={handleSearch}
-              value={search}
-            />
-                {/* danh sách gợi ý */}
-              {suggestions.length > 0 && (
-                <div className="search-suggestions">
-                  {suggestions.map((item) => (
-                    <div key={item.id} className="suggestion-item">
-                      <img src={item.image} alt={item.name} width="40" height="40" />
-                      <span>{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div>
-              <a href="#">
-                <i className="fa-solid fa-cart-shopping"></i>
-                {cart.length > 0 && <span>{cart.length}</span>}
-              </a>
-              <a href="/Login"><i class="fa-solid fa-user"></i></a>
-              </div>
-            </div>
-          </nav>
-        </div>
-
       <div className="row banner">
-        <div className="col-6 menu">
-          <ul><h1>Danh mục</h1>
-            <li>Tất cả sản phẩm</li>
-            <li>PC Gaming - Máy tính chơi game</li>
-            <li>Laptop</li>
-            <li>Khuyến mãi</li>
-          </ul>
-        </div>
-
         <div className="col-6 bgtext">
           <img src="/case.jpg" alt="demo" />
           <h2>Giá Tốt khuyến mãi Khủng</h2>

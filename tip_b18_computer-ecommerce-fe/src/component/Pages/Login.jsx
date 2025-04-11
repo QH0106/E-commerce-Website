@@ -38,6 +38,7 @@ const Login = () => {
 
       if (response.data.statusCode === 200) {
         alert ("Đăng nhập thành công!");
+        localStorage.setItem("currentUser", JSON.stringify({ username }));
         navigate("/HomePage");
         
       } else {
