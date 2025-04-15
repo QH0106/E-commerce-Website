@@ -54,6 +54,7 @@ const handleSearch = (e) => {
     
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
     setIsLogin(false);
     setUsername("");
   };
