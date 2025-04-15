@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../Css/Login.css";
+import axiosInstance, { setAuthToken } from "../Author/axiosInstance";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -30,17 +30,25 @@ const Login = () => {
     }
 
     try {
-      // Gửi yêu cầu đăng nhập
-      const response = await axios.post("http://192.168.199.43:8080/api/v1/auth/login", {
+      const response = await axiosInstance.post("/v1/auth/login", {
         username,
         password,
       });
 
+      console.log("RESPONSE LOGIN:", response.data);
+
       if (response.data.statusCode === 200) {
-        alert ("Đăng nhập thành công!");
-        localStorage.setItem("currentUser", JSON.stringify({ username }));
-        navigate("/HomePage");
+        const userData = response.data.data; 
+        // const role = userData.roles[0]; // ← lấy role đầu tiên từ mảng roles
+
+        setAuthToken(userData?.accessToken);
+        localStorage.setItem("token", userData?.accessToken);
+        // (Tùy chọn) Lưu token vào localStorage nếu cần dùng lại khi reload
         
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+
+        alert("Đăng nhập thành công!");
+        navigate("/HomePage");
       } else {
         alert(response.data.message || "Sai username hoặc mật khẩu!");
       }

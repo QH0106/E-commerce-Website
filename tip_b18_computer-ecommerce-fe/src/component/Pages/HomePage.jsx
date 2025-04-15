@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 import { Carousel } from 'react-bootstrap';
-import "../Css/Homepage.css"
+import "../Css/Homepage.css";
+import axiosInstance from "../Author/axiosInstance";
 
 const HomePage = () => {
   const [cart, setCart] = useState([]);
@@ -11,7 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
+        const response = await axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -77,14 +77,13 @@ const addToCart = (product) => {
               {products.slice(0, 4).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div href="/Detail" className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
-                    <a href="/Detail"><img className="card-img-top" src={product.image} alt="{product.img}" /></a>
+                    <a href="/Detail"><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></a>
                     <h5>{product.name}</h5>
                     <div style={{display: "flex"}}>
                       <p style={{textDecoration: "line-through", color: "#7C7979", marginRight: "10px"  }}>{product.old}</p>
                       <p style={{color: "#BC1616"}}>{product.sale}</p>
                     </div>
                     <p style={{color: "red",}}>Giá: {product.price}</p>
-                    {/* <p>Đánh giá: {product.rating}⭐</p> */}
                     <button className="btncard" onClick={() => addToCart(product)}>
                       Thêm vào giỏ hàng
                     </button>
@@ -108,7 +107,6 @@ const addToCart = (product) => {
                       <p style={{color: "#BC1616"}}>{product.sale}</p>
                     </div>
                     <p style={{color: "red",}}>Giá: {product.price}</p>
-                    {/* <p>Đánh giá: {product.rating}⭐</p> */}
                     <button className="btncard" onClick={() => addToCart(product)}>
                       Thêm vào giỏ hàng
                     </button>
@@ -119,28 +117,6 @@ const addToCart = (product) => {
         </div>
       </div>
       </div>
-      {/* Footer */}
-      <footer className="text-black text-center p-3 mt-4">
-        <p>LOGONAME</p>
-        <div>
-          <ul>
-            <li>Hệ thống cửa hàng</li>
-            <li>Hướng dẫn mua hàng</li>
-            <li>Hướng dẫn thanh toán</li>
-            <li>Hướng dẫn trả góp</li>
-            <li>Tra cứu địa chỉ bảo hành</li>
-          </ul>
-        </div>
-        <div>
-          <ul>HỖ TRỢ KHÁCH HÀNG:
-            <li>Chính sách đổi trả</li>
-            <li>Chính sách khách hàng thân thiết</li>
-            <li>Giao hàng & phí giao hàng</li>
-            <li> Chính sách bảo mật thông tin</li>
-            <li> Chính sách đại lý</li>
-          </ul>
-        </div>
-      </footer>
     </div>
   );
 };

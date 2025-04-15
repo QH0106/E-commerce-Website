@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../Author/axiosInstance";
 import "../Css/Register.css";
 
 const Register = () => {
@@ -48,7 +48,7 @@ const handleRegister = async (e) => {
 
   try {
     // Gửi yêu cầu đăng ký đến API
-    const response = await axios.post("http://192.168.199.43:8080/api/v1/auth/register", {
+    const response = await axiosInstance.post("http://192.168.199.43:8080/api/v1/auth/register", {
       username,
       fullname,
       email,

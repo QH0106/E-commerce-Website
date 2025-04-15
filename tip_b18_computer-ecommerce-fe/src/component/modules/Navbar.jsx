@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../Css/Homepage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
+import axiosInstance from "../Author/axiosInstance";
 
 const Navbar = () => {
   const [cart] = useState([]);
@@ -10,11 +10,13 @@ const Navbar = () => {
   const [Isloggin, setIsLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [products, setProducts] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
+        const response = await axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -31,6 +33,7 @@ useEffect(() => {
   if (currentUser && currentUser.username) {
     setIsLogin(true);
     setUsername(currentUser.username);
+    setIsAdmin(currentUser.role === "ROLE_ADMIN");
   } else {
     setIsLogin(false);
     setUsername("");
@@ -102,7 +105,7 @@ const handleSearch = (e) => {
                   {suggestions.map((item) => (
                     <div key={item.id} className="suggestion-item">
                       <a href="/">
-                        <img src={item.image} alt={item.name} width="40" height="40" />
+                        <img src={item.thumbnail} alt={item.name} width="40" height="40" />
                         <span>{item.name}</span>
                       </a>
                     </div>
@@ -111,13 +114,13 @@ const handleSearch = (e) => {
               )}
               </form>
             </div>
-            
+          
               <a href="/Cart">
                 <i className="fa-solid fa-cart-shopping" style={{fontSize: "20px"}}></i>
                 {cart.length > 0 && <span>{cart.length}</span>}
               </a>
 
-              <a href="/Admin">Admin</a>
+              {isAdmin && <a href="/Admin">Admin</a>}
 
               {Isloggin ? (
                 <span style={{color:"white"}}>

@@ -53,3 +53,12 @@
     text-align: center;
     justify-content: center;
 }
+
+h5{
+    font-size: 1rem;
+}
+
+.load {
+    text-decoration: none;
+    color: #ffffff;
+}
