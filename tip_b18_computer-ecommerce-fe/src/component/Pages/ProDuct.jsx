@@ -12,7 +12,7 @@ const ProDuct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=name") 
+    axiosInstance.get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=name") 
       .then(response => {
         setProducts(response.data);
       })
@@ -29,7 +29,7 @@ const ProDuct = () => {
     }
 
     const cartItem = {
-      userId: currentUser.id, // Sửa lại lấy id nếu API yêu cầu
+      userId: currentUser.id,
       productId: product.id,
       quantity: 1
     };
@@ -84,7 +84,9 @@ const ProDuct = () => {
         <h2 style={{ color: "#000" }}>I3</h2>
         {filteredProducts.slice(0, 8).map((product) => (
           <div key={product.id} className="col-md-3 mb-3">
-            <div className="card p-3" style={{ backgroundColor: "#F8F4F4" }}>
+            <div className="card p-3"
+             onClick={() => navigate(`/Detail/${product.id}`)} 
+             style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}>
               <img className="card-img-top" src={product.thumbnail || product.image} alt={product.name} />
               <h5>{product.name}</h5>
               <p style={{ color: "#000000" }}>{product.brand}</p>

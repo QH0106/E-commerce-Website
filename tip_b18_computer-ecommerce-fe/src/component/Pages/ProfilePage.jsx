@@ -8,10 +8,10 @@ import { ToastContainer, toast } from "react-toastify";
 const UserProfilePage = () => {
   const [key, setKey] = useState("info");
   const [user, setUser] = useState({
-    name: "Nguyễn Văn A",
-    gender: "male",
-    phone: "********",
-    email: "*******@gmail.com",
+    name: "",
+    gender: "",
+    phone: "",
+    email: "@gmail.com",
     birthdate: "",
   });
 

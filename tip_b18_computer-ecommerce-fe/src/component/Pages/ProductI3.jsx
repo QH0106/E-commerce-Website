@@ -10,7 +10,7 @@ const ProDuct = () => {
 
   // Call API khi component mount
   useEffect(() => {
-    axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=name") 
+    axiosInstance.get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=name") 
       .then(response => {
         setProducts(response.data);
       })

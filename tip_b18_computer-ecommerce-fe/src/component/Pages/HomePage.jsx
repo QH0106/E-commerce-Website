@@ -5,13 +5,13 @@ import "../Css/Homepage.css";
 import axiosInstance from "../Author/axiosInstance";
 
 const HomePage = () => {
-  const [cart, setCart] = useState([]);
+  // const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
+        const response = await axiosInstance.get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -24,8 +24,26 @@ const HomePage = () => {
 // const filteredProducts = products
 
 const addToCart = (product) => {
-  setCart([...cart, product]);
-  alert(`${product.name} đã thêm vào giỏ hàng!`);
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (!currentUser) {
+    alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    return;
+  }
+
+  const cartItem = {
+    userId: currentUser.id,
+    productId: product.id,
+    quantity: 1
+  };
+
+  axiosInstance.post("http://192.168.199.43:8080/api/carts/add", cartItem)
+    .then(() => {
+      alert(`${product.name} đã thêm vào giỏ hàng!`);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi thêm vào giỏ hàng:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại!");
+    });
 };
    
   return (

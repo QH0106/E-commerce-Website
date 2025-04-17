@@ -38,18 +38,18 @@ const Login = () => {
       console.log("RESPONSE LOGIN:", response.data);
 
       if (response.data.statusCode === 200) {
-        const userData = response.data.data; 
-        // const role = userData.roles[0]; // ← lấy role đầu tiên từ mảng roles
-
-        setAuthToken(userData?.accessToken);
-        localStorage.setItem("token", userData?.accessToken);
-        // (Tùy chọn) Lưu token vào localStorage nếu cần dùng lại khi reload
-        
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-
+        const userData = response.data.data;
+      
+        const { accessToken, ...userInfo } = userData;
+      
+        setAuthToken(accessToken);
+        localStorage.setItem("token", accessToken); 
+        localStorage.setItem("currentUser", JSON.stringify(userInfo)); 
+      
         alert("Đăng nhập thành công!");
         navigate("/HomePage");
-      } else {
+      }
+       else {
         alert(response.data.message || "Sai username hoặc mật khẩu!");
       }
     } catch (error) {
