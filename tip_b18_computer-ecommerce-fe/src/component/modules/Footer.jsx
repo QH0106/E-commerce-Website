@@ -6,7 +6,7 @@ const Footer = () => {
     <div>
       {/* Footer */}
       <footer className="text-black text-center p-3 mt-4">
-        <p>LOGONAME</p>
+        <p>ComputerShop</p>
         <div>
           <ul>
             <li>Hệ thống cửa hàng</li>

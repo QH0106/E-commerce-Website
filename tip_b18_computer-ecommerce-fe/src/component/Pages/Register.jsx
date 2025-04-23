@@ -48,7 +48,7 @@ const handleRegister = async (e) => {
 
   try {
     // Gửi yêu cầu đăng ký đến API
-    const response = await axiosInstance.post("http://192.168.199.43:8080/api/v1/auth/register", {
+    const response = await axiosInstance.post("/v1/auth/register", {
       username,
       fullname,
       email,

@@ -35,27 +35,27 @@ const Login = () => {
         password,
       });
 
-      console.log("RESPONSE LOGIN:", response.data);
-
       if (response.data.statusCode === 200) {
         const userData = response.data.data;
-      
         const { accessToken, ...userInfo } = userData;
-      
+
         setAuthToken(accessToken);
-        localStorage.setItem("token", accessToken); 
-        localStorage.setItem("currentUser", JSON.stringify(userInfo)); 
-      
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("currentUser", JSON.stringify(userInfo));
+
         alert("Đăng nhập thành công!");
         navigate("/HomePage");
-      }
-       else {
+      } else {
         alert(response.data.message || "Sai username hoặc mật khẩu!");
       }
     } catch (error) {
       console.error("Lỗi đăng nhập:", error);
       alert("Đăng nhập thất bại! Vui lòng thử lại.");
     }
+  };
+
+  const loginWithGoogle = () => {
+    window.location.href = "/v1/auth/oauth2/authorize/google";
   };
 
   return (
@@ -110,8 +110,8 @@ const Login = () => {
           <p className="text">Hoặc tiếp tục với</p>
 
           <div className="icon-social">
-            <div className="link-social">
-              <a href="/"><i className="fa-brands fa-google"></i></a>
+            <div className="link-social" onClick={loginWithGoogle}>
+              <i className="fa-brands fa-google" style={{ cursor: "pointer" }}></i>
             </div>
           </div>
 

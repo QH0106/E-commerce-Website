@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
-import "../Css/Homepage.css";
+import React, { useEffect, useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Đảm bảo có JS để toggler hoạt động
 import axiosInstance from "../Author/axiosInstance";
+import "../Css/Navbar.css";
 
 const Navbar = () => {
   const [cart] = useState([]);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [Isloggin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [products, setProducts] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get("http://192.168.199.43:8080/api/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
+        const response = await axiosInstance.get("/products/getAllProducts");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -60,86 +62,158 @@ const handleSearch = (e) => {
   };
 
   return (
-      <div className="header">
-        <nav className="navbar navbar-expand-sm">
-          <div className="container">
-            <a className="brand" href="/HomePage">Logo</a>
-            <div className="collapse navbar-collapse" id="mynavbar">
-              <ul className="navbar-nav me-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="">PC</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="">Laptop</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="">Gear</a>
-                  <div className="dropdown" >
-                    <a href="">1</a>
-                    <a href="">2</a>
-                    <a href="">3</a>
-                  </div>
-                </li>
-              </ul>
-            
-              <form className="search d-flex">
-              <input
-                type="text"
-                className="form-control me-2"
-                placeholder="Tìm kiếm..."
-                onChange={handleSearch}
-                value={search}
-              />
-              {/* Hiển thị danh sách gợi ý */}
-              {suggestions.length > 0 && (
-                <div className="search-suggestions">
-                  {suggestions.map((item) => (
-                    <div key={item.id} className="suggestion-item">
-                      <a href="/">
-                        <img src={item.thumbnail} alt={item.name} width="40" height="40" />
-                        <span>{item.name}</span>
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              )}
-              </form>
-            </div>
-          
-              <a href="/Cart">
-                <i className="fa-solid fa-cart-shopping" style={{fontSize: "20px"}}></i>
-                {cart.length > 0 && <span>{cart.length}</span>}
-              </a>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-danger px-3">
+      <a className="navbar-brand fw-bold" href="/HomePage" style={{marginLeft:"100px", fontSize:"25px"}}>ComputerShop</a>
 
-              {isAdmin && <a href="/Admin">Admin</a>}
+      {/* Toggler Button */}
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
 
-              {Isloggin ? (
-                <span style={{color:"white"}}>
-                  <i className="fa-regular fa-user" style={{fontSize: "20px", marginRight: "10px"}}></i>
-                  Xin chào, {username} | <span onClick={handleLogout} style={{cursor:"pointer", color:"black"}}>Đăng xuất</span>
-                </span>
-              ) : (
-                <a href="/Login" style={{cursor:"pointer"}}>
-                  <i className="fa-solid fa-user" style={{fontSize: "20px", marginRight: "10px"}}></i>
-                </a>
-              )}
+      {/* Collapsible content */}
+      <div className="collapse navbar-collapse" id="mainNavbar" >
+      <ul className="navbar-nav me-auto mb-2 mb-lg-0" style={{margin:"auto", gap:"20px"}}>
+        <li className="nav-item dropdown">
+          <a
+            className="nav-link dropdown-toggle"
+            href="/ProDuct"
+            id="pcDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            PC
+          </a>
+          <ul className="dropdown-menu" aria-labelledby="pcDropdown">
+            <li><a className="dropdown-item" href="/ProDuct">Tất cả sản phẩm</a></li>
+            <li><a className="dropdown-item" href="/ProductI3">PC I3</a></li>
+            <li><a className="dropdown-item" href="/ProductI5">PC I5</a></li>
+            <li><a className="dropdown-item" href="/ProductI7">PC I7</a></li>
+          </ul>
+        </li>
 
-              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            </div>
-          </nav>
+        <li className="nav-item dropdown">
+          <a
+            className="nav-link dropdown-toggle"
+            href="#"
+            id="laptopDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Laptop
+          </a>
+          <ul className="dropdown-menu" aria-labelledby="laptopDropdown">
+            <li><a className="dropdown-item" href="#">Laptop Gaming</a></li>
+            <li><a className="dropdown-item" href="#">Laptop Văn phòng</a></li>
+            <li><a className="dropdown-item" href="#">Laptop Sinh viên</a></li>
+          </ul>
+        </li>
+
+        <li className="nav-item dropdown">
+          <a
+            className="nav-link dropdown-toggle"
+            href="#"
+            id="gearDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Gear
+          </a>
+          <ul className="dropdown-menu" aria-labelledby="gearDropdown">
+            <li><a className="dropdown-item" href="#">Chuột</a></li>
+            <li><a className="dropdown-item" href="#">Bàn phím</a></li>
+            <li><a className="dropdown-item" href="#">Tai nghe</a></li>
+          </ul>
+        </li>
+      </ul>
+
+
+        {/* Search */}
+        <div className="d-flex me-2 position-relative" ref={searchRef} style={{ width: "500px", paddingRight: "50px" }}>
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Tìm kiếm sản phẩm..."
+            aria-label="Search"
+            value={search}
+            onChange={handleSearch}
+          />
         </div>
+
+        {/* Gợi ý tìm kiếm */}
+        {suggestions.length > 0 && (
+          <div className="search-suggestions position-absolute bg-white">
+            {suggestions.map((item) => (
+              <div key={item.id} className="suggestion-item">
+                <a href={`/product/${item.id}`}>
+                  <img src={item.thumbnail} alt={item.name} width="40" height="40" />
+                  <span>{item.name}</span>
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* User + Cart */}
+        <div className="d-flex align-items-center ms-2 gap-4" style={{ marginRight: "50px" }}>
+  <a href="/Cart">
+    <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white" }}></i>
+    {cart.length > 0 && <span>{cart.length}</span>}
+  </a>
+
+  {isAdmin && <a href="/Admin" className="text-white">Admin</a>}
+
+  {isLogin ? (
+    <div className="dropdown">
+      <span
+        className="dropdown-toggle text-white d-flex align-items-center"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        style={{ cursor: "pointer" }}
+      >
+        <i className="fa-regular fa-user me-2" style={{ fontSize: "25px", marginRight:"20px" }}></i>
+        {username}
+      </span>
+      <ul className="dropdown-menu dropdown-menu-end">
+        <li><span className="dropdown-item-text"><a href="/ProfilePage">Xin chào, {username}</a></span></li>
+        <li><hr className="dropdown-divider" /></li>
+        
+        {isAdmin && (
+          <li><a className="dropdown-item" href="/Admin">Vào trang quản trị</a></li>
+        )}
+
+        <li><a className="dropdown-item" href="/PurchaseHistoryPage">Đơn hàng của tôi</a></li>
+        <li>
+          <span
+            className="dropdown-item"
+            style={{ cursor: "pointer" }}
+            onClick={handleLogout}
+          >
+            Đăng xuất
+          </span>
+        </li>
+      </ul>
+
+      </div>
+        ) : (
+          <a href="/Login" className="text-white">
+            <i className="fa-solid fa-user" style={{ fontSize: "25px", marginRight:"20px" }}></i>
+          </a>
+        )}
+      </div>
+      </div>
+    </nav>
   );
 };
 

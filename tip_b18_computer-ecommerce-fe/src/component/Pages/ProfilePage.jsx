@@ -11,7 +11,7 @@ const UserProfilePage = () => {
     name: "",
     gender: "",
     phone: "",
-    email: "@gmail.com",
+    email: "",
     birthdate: "",
   });
 
@@ -21,7 +21,7 @@ const UserProfilePage = () => {
 
 // const handleSave = async () => {
 //   try {
-//     await axios.put("https://your-backend.com/api/user/update", user);
+//     await axios.put("/user/update", user);
 //     toast.success(" Thông tin đã được lưu!");
 //   } catch (error) {
 //     toast.error(" Có lỗi xảy ra khi lưu!");
@@ -38,6 +38,7 @@ const UserProfilePage = () => {
   //   try {
   //     await axios.post("/api/logout"); 
   //     localStorage.removeItem("currentUser");
+  //     localStorage.removeItem("token");
   //     toast.info(" Đã đăng xuất!");
   //   } catch (error) {
   //     toast.error(" Đăng xuất thất bại!");

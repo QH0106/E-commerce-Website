@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, Link } from "react-router-dom";
-import HomePage from "./component/Pages/HomePage";
-import Login from "./component/Pages/Login";
-import Register from "./component/Pages/Register";
-import Forgotpassword from "./component/Pages/Forgotpassword";
-import ProDuct from "./component/Pages/ProDuct";
+import { Route, Routes } from "react-router-dom";
 import Admin from "./component/Admins/Admin";
 import ProductManagement from "./component/Admins/ProductManagement";
-import Detail from "./component/Pages/Detail";
-import Cart from "./component/Pages/Cart";
-import ProfilePage from "./component/Pages/ProfilePage";
 import MainLayout from "./component/modules/MainLayout";
-import ProductI3 from "./component/Pages/ProductI3";
+import { ProductI3, ProductI5, ProductI7, ProfilePage, PurchaseHistoryPage, 
+ConfirmOrderPage, OAuth2RedirectHandler, Cart, Detail, ProDuct, HomePage,
+Login, Register, Forgotpassword } from "./component/Pages";
 import { setAuthToken } from "./component/Author/axiosInstance";
-import ConfirmOrderPage from "./component/Pages/ConfirmOrderPage";
-
 
 function App() {
     const [cart, setCart] = useState([]);
@@ -33,13 +25,18 @@ function App() {
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/ProDuct" element={<ProDuct cart={cart} setCart={setCart} />} />
           <Route path="/Cart" element={<Cart cart={cart} />} /> 
-          <Route path="/Detail/:id" element={<Detail />} />
+          <Route path="/Detail/:id" element={<Detail cart={cart} setCart={setCart} />} />
           <Route path="/ProfilePage" element={<ProfilePage />} />
           <Route path="/ConfirmOrderPage" element={<ConfirmOrderPage />} />
+          <Route path="/ProductI3" element={<ProductI3 />} />
+          <Route path="/ProductI5" element={<ProductI5 />} />
+          <Route path="/ProductI7" element={<ProductI7 />} />
+          <Route path="/PurchaseHistoryPage" element={<PurchaseHistoryPage />} />
           
         </Route>
         
         <Route path="/login" element={<Login />} />
+        <Route path="/OAuth2RedirectHandler" element={<OAuth2RedirectHandler/>} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Forgotpassword" element={<Forgotpassword />} />
         <Route path="/Admin" element={<Admin />} />

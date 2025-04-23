@@ -19,9 +19,6 @@ const ConfirmOrderPage = () => {
     }
   };
 
-  const qrImageUrl = orderId
-    ? `https://qr.sepay.vn/img?acc=38329112004&bank=TPB&amount=${total}&des=${orderId}`
-    : null;
 
   return (
     <Container className="py-5">
@@ -59,7 +56,7 @@ const ConfirmOrderPage = () => {
       {paymentMethod === "QRCODE" && orderId && (
         <div className="text-center mb-4">
           <p><strong>Quét mã QR để thanh toán</strong></p>
-          <Image src={qrImageUrl} alt="QR Code" fluid style={{ maxWidth: "200px" }} />
+
           <p className="text-info mt-3"> Nội dung chuyển khoản: <code>{orderId}</code></p>
         </div>
       )}

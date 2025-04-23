@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Carousel } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 import "../Css/Homepage.css";
 import axiosInstance from "../Author/axiosInstance";
 
@@ -11,7 +12,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=string");
+        const response = await axiosInstance.get("/products/getAllProducts");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -36,7 +37,7 @@ const addToCart = (product) => {
     quantity: 1
   };
 
-  axiosInstance.post("http://192.168.199.43:8080/api/carts/add", cartItem)
+  axiosInstance.post("/carts/add", cartItem)
     .then(() => {
       alert(`${product.name} đã thêm vào giỏ hàng!`);
     })
@@ -94,8 +95,8 @@ const addToCart = (product) => {
             <div className="row">
               {products.slice(0, 4).map((product) => (
                 <div key={product.name} className="col-md-3">
-                  <div href="/Detail" className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
-                    <a href="/Detail"><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></a>
+                  <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
+                    <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
                     <h5>{product.name}</h5>
                     <div style={{display: "flex"}}>
                       <p style={{textDecoration: "line-through", color: "#7C7979", marginRight: "10px"  }}>{product.old}</p>
@@ -118,7 +119,7 @@ const addToCart = (product) => {
               {products.slice(0, 5).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px"}}>
-                    <a href="/Detail"><img className="card-img-top" src={product.image} alt="{product.id}" /></a>
+                  <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
                     <h5>{product.name}</h5>
                     <div style={{display: "flex"}}>
                       <p style={{textDecoration: "line-through", color: "#7C7979", marginRight: "10px"  }}>{product.old}</p>

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "../Css/Forgotpassword.css";
 
 export const Forgotpassword = () => {
-  const [email, setEmail] = useState(""); // Lưu email nhập vào
-  const [message, setMessage] = useState(""); // thông báo
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleResetPassword = (e) => {
     e.preventDefault();
@@ -12,7 +12,6 @@ export const Forgotpassword = () => {
       return;
     }
 
-    //gửi email 
     setMessage(`Một liên kết đặt lại mật khẩu đã được gửi tới ${email}`);
   };
 

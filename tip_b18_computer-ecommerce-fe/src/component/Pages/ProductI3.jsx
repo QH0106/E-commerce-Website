@@ -1,64 +1,146 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../Author/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import {Container, Row, Col, Card, Button, Pagination, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../Css/ProDuct.css";
 
-const ProDuct = () => {
+const ProductI3 = () => {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [sort, setSort] = useState("price");
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [sortOption, setSortOption] = useState("name");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+  const pageSize = 10;
 
-  // Call API khi component mount
   useEffect(() => {
-    axiosInstance.get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=name") 
-      .then(response => {
-        setProducts(response.data);
+    axiosInstance
+      .get(`/products/getAllProducts?page=${page}&size=${pageSize}&sort=false&sortBy=name`)
+      .then((res) => {
+        const i5Products = res.data.filter((p) =>
+          p.name.toLowerCase().includes("i3")
+        );
+        setProducts(i5Products);
       })
-      .catch(error => {
-        console.error("Lỗi khi lấy sản phẩm:", error);
-      });
-  }, []);
+      .catch((err) => console.error("Lỗi lấy sản phẩm i3:", err));
+  }, [page]);
+
+  useEffect(() => {
+    let sorted = [...products];
+    switch (sortOption) {
+      case "name":
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "priceAsc":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "priceDesc":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+    setSortedProducts(sorted);
+    setTotalPages(Math.ceil(sorted.length / pageSize));
+  }, [products, sortOption]);
 
   const addToCart = (product) => {
-    setCart([...cart, product]);
-    alert(`${product.name} đã thêm vào giỏ hàng!`);
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+      return;
+    }
+
+    const cartItem = {
+      userId: currentUser.id,
+      productId: product.id,
+      quantity: 1,
+    };
+
+    axiosInstance.post("/carts/add", cartItem)
+      .then(() => {
+        alert(`${product.name} đã thêm vào giỏ hàng!`);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi thêm vào giỏ hàng:", error);
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+      });
   };
 
-  const filteredProducts = products
-    .sort((a, b) => (sort === "price" ? a.price - b.price : b.price - a.price));
+  const handleClick = (id) => navigate(`/Detail/${id}`);
 
   return (
-    <div className="PageHm container-fluid">
-      
-      {/* Bộ lọc */}
-      <div className="d-flex justify-content-between mt-3">
-        <select className="form-select w-25" onChange={(e) => setSort(e.target.value)}>
-          <option value="price">giá tăng dần</option>
-          <option value="">giá giảm dần</option>
-        </select>
-      </div>
+    <Container className="py-4">
+      <h2 className="text-center mb-4">Sản phẩm CPU Intel Core i3</h2>
 
-      {/* Danh sách sản phẩm */}
-      <div className="row mt-4">
-        <h2 style={{color:"#000", }}>I3</h2>
-        {filteredProducts.slice(0, 9).map((product) => (
-          <div key={product.id} className="col-md-3 mb-3">
-            <div className="card p-3" style={{ backgroundColor: "#F8F4F4" }}>
-              <img className="card-img-top" src={product.image} alt='' />
-              <h5>{product.name}</h5>
-              {/* <p style={{ textDecoration: "line-through", color: "#7C7979" }}>{product.old}</p>
-              <p style={{ color: "#BC1616" }}>{product.sale}</p> */}
-              <p style={{ color: "#000000" }}>{product.brand}</p>
-              <p style={{ color: "red" }}>Giá: {product.price.toLocaleString("vi-VN")}₫</p>
-              {/* <p>Đánh giá: {product.rating || 5}⭐</p> */}
-              <button className="btn btn-danger" onClick={() => addToCart(product)}>Thêm vào giỏ hàng</button>
-            </div>
-          </div>
-        ))}
-        <button href="" className="load">Xem Thêm</button>
-      </div> 
-    </div>
-  )
+      <Row className="mb-3">
+        <Col md={3}>
+          <Form.Select
+            value={sortOption}
+            onChange={(e) => {
+              setSortOption(e.target.value);
+              setPage(1); // reset về trang đầu khi sắp xếp lại
+            }}
+          >
+            <option value="name">Sắp xếp theo tên (A-Z)</option>
+            <option value="priceAsc">Giá tăng dần</option>
+            <option value="priceDesc">Giá giảm dần</option>
+          </Form.Select>
+        </Col>
+      </Row>
+
+      <Row>
+        {sortedProducts
+          .slice((page - 1) * pageSize, page * pageSize)
+          .map((product) => (
+            <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
+              <Card
+                className="h-100 shadow-sm"
+                onClick={() => handleClick(product.id)}
+                style={{ cursor: "pointer" }}
+              >
+                <Card.Img
+                  variant="top"
+                  src={product.thumbnail || product.image}
+                  
+                />
+                <Card.Body>
+                  <Card.Title>{product.name}</Card.Title>
+                  <Card.Text className="text-danger">
+                    {product.price.toLocaleString("vi-VN")}₫
+                  </Card.Text>
+                  <Button
+                    variant="danger"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
+                  >
+                    Thêm vào giỏ
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+      </Row>
+
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} />
+          {[...Array(totalPages)].map((_, i) => (
+            <Pagination.Item
+              key={i + 1}
+              active={i + 1 === page}
+              onClick={() => setPage(i + 1)}
+            >
+              {i + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} />
+        </Pagination>
+      </div>
+    </Container>
+  );
 };
 
-export default ProDuct;
+export default ProductI3;
