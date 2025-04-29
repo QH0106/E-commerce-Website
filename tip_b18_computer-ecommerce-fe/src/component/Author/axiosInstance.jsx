@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  // baseURL: "https://deployapi-xw5c.onrender.com/api",
-   baseURL: "http://192.168.199.43:8080/api",
+  baseURL: "https://deployapi-xw5c.onrender.com/api",
+  //  baseURL: "http://192.168.199.49:8080/api",
   timeout: 10000,
 });
 

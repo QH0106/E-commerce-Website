@@ -2,10 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Form, Button, Image, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Author/axiosInstance";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
-  const [customer, setCustomer] = useState({ name: "", phone: "", address: "" });
+  const [customer, setCustomer] = useState({ fullname: "", phone: "", address: "" });
   const [loading, setLoading] = useState(true);
   const [orderId, setOrderId] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState("UNPAID");
@@ -17,14 +20,15 @@ const CartPage = () => {
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const userId = currentUser?.id;
-    if (!userId) return setLoading(false);
+    const userId = currentUser?.data.id;
 
+    if (!userId) return setLoading(false);
+    
     axiosInstance
       .get(`/carts/getCartByUserId/${userId}`)
       .then((res) => {
-        const cartData = res.data?.cartDetails || [];
-        const formattedCart = cartData.map((item) => ({
+        const cartDetails = res.data?.cartDetails || [];
+        const formattedCart = cartDetails.map((item) => ({
           id: item.productId,
           cartItemId: item.id,
           name: item.nameProduct,
@@ -34,8 +38,7 @@ const CartPage = () => {
           totalPrice: item.totalPrice,
           selected: true,
         }));
-
-        
+  
         setCart(formattedCart);
         setLoading(false);
       })
@@ -44,6 +47,7 @@ const CartPage = () => {
         setLoading(false);
       });
   }, []);
+  
 
   const handleQuantityChange = (id, delta) => {
     setCart(
@@ -61,10 +65,18 @@ const CartPage = () => {
     );
   };
 
-  const handleRemoveItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+  const handleRemoveItem = (cartItemId) => {
+    axiosInstance
+      .delete(`/carts/items/${cartItemId}`)
+      .then(() => {
+        setCart(cart.filter((item) => item.cartItemId !== cartItemId));
+      })
+      .catch((error) => {
+        console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+        toast.error("Xóa sản phẩm thất bại.");
+      });
   };
-
+  
   const handleSelectAll = (checked) => {
     setCart(cart.map((item) => ({ ...item, selected: checked })));
   };
@@ -73,47 +85,74 @@ const CartPage = () => {
     .filter((item) => item.selected)
     .reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
 
-  const handleBuy = () => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser?.email) {
-      alert("Bạn cần đăng nhập để thanh toán.");
-      return;
-    }
+    const handleBuy = () => {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser?.data.id) {
+        toast.warning("Bạn cần đăng nhập để thanh toán.");
+        return;
+      }
+    
+      const selectedItems = cart.filter((item) => item.selected);
+      if (selectedItems.length === 0) {
+        toast.info("Vui lòng chọn ít nhất 1 sản phẩm.");
+        return;
+      }
+    
+      if (!customer.phone || !customer.address) {
+        alert("Vui lòng nhập đầy đủ thông tin khách hàng (Số điện thoại, Địa chỉ).");
+        return;
+      }
 
-    const selectedItems = cart.filter((item) => item.selected);
-    if (selectedItems.length === 0) {
-      alert("Vui lòng chọn ít nhất 1 sản phẩm.");
-      return;
-    }
-
-    const orderData = {
-      cartItemIds: selectedItems.map((item) => item.cartItemId),
-      shippingAddress: customer.address,
-      note: customer.note || "",
+      const orderData = {
+        cartItemIds: selectedItems.map((item) => item.cartItemId),
+        shippingAddress: customer.address,
+        note: customer.note || "",
+      };
+    
+      axiosInstance
+        .post("/orders/create", orderData)
+        .then((response) => {
+          const createdOrderId = response.data.orderId;
+          setOrderId(createdOrderId);
+    
+          if (paymentMethod === "COD") {
+            toast.success("Đặt hàng thành công!");
+            setTimeout(() => {
+              axiosInstance
+                .get(`/carts/getCartByUserId/${currentUser.id}`)
+                .then((res) => {
+                  const updatedCart = res.data?.cartDetails || [];
+                  const formattedCart = updatedCart.map((item) => ({
+                    id: item.productId,
+                    cartItemId: item.id,
+                    name: item.nameProduct,
+                    thumbnail: item.thumbnail,
+                    quantity: item.quantity,
+                    price: item.unitPrice,
+                    totalPrice: item.totalPrice,
+                    selected: true,
+                  }));
+                  setCart(formattedCart);
+                })
+                .catch((err) => {
+                  console.error("Lỗi khi cập nhật giỏ hàng:", err);
+                });
+    
+                navigate("/ConfirmOrderPage", { state: { customer, total } });
+                
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              setShowQR(true);
+            }, 1000);
+          }
+        })
+        .catch((error) => {
+          console.error("Lỗi khi gọi API tạo đơn hàng:", error);
+          toast.error("Đặt hàng thất bại.");
+        });
     };
-
-    axiosInstance
-      .post("/orders/create", orderData)
-      .then((response) => {
-        const createdOrderId = response.data.orderId;
-        setOrderId(createdOrderId);
-
-        if (paymentMethod === "COD") {
-          alert("Đặt hàng thành công!");
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            setShowQR(true);
-          }, 1000);
-        }
-      })
-      .catch((error) => {
-        console.error("Lỗi khi gọi API tạo đơn hàng:", error);
-        alert("Đặt hàng thất bại.");
-      });
-  };
+    
 
   const handlePayment = () => {
     if (!orderId) return;
@@ -122,14 +161,14 @@ const CartPage = () => {
       .get("/orders/user")
       .then((res) => {
         const orders = res.data?.data?.content || [];
-        const matchedOrder = orders.find((o) => o.id === orderId);
-        if (matchedOrder?.PaymentStatus === "PAID") {
-          paymentStatus("PAID");
+        const matchedOrder = orders.find((o) => o.orderId === orderId);
+
+        if (matchedOrder?.paymentStatus === "PAID") {
           setPaymentStatus("PAID");
-          alert("Thanh toán thành công!");
-          setTimeout(() => navigate("/ConfirmOrderPage"), 1000);
+          toast.success("Thanh toán thành công!");
+          navigate("/ConfirmOrderPage", { state: { customer, total } });
         } else {
-          alert("Chưa nhận được thanh toán, vui lòng thử lại sau.");
+          toast.warning("Chưa nhận được thanh toán, vui lòng thử lại sau.");
         }
       })
       .catch((err) => {
@@ -176,7 +215,33 @@ const CartPage = () => {
 
   const qrImageUrl = `https://qr.sepay.vn/img?acc=38329112004&bank=TPB&amount=${total}&des=${orderId}`;
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return 
+  <div style={{height:"100vh", backgroundColor:"gray"}}>
+    <div class="spinner-grow text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>;
 
   return (
     <Container className="py-5">
@@ -210,16 +275,14 @@ const CartPage = () => {
                 <div className="text-danger fw-bold">{item.price.toLocaleString()}₫</div>
               </Col>
               <Col xs={1}>
-                <span>
                   <InputGroup size="sm">
                     <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, -1)}>-</Button>
                     <Form.Control value={item.quantity} readOnly style={{ width: "40px", textAlign: "center" }} />
                     <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, 1)}>+</Button>
                   </InputGroup>
-                </span>
               </Col>
               <Col xs={1}>
-                <Button variant="link" className="text-danger" onClick={() => handleRemoveItem(item.id)}>
+                <Button variant="link" className="text-danger" onClick={() => handleRemoveItem(item.cartItemId)}>
                   <i className="fa-solid fa-trash"></i>
                 </Button>
               </Col>
@@ -229,8 +292,21 @@ const CartPage = () => {
 
         <Col md={4} className="border p-3">
           <h6>Thông tin khách hàng</h6>
-          <Form.Control placeholder="Số Điện Thoại" className="mb-2"  onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />
-          <Form.Control as="textarea" rows={2} placeholder="Địa Chỉ Nhận Hàng" className="mb-3" onChange={(e) => setCustomer({ ...customer, address: e.target.value })} />
+          <Form.Control
+            placeholder="Tên Khách Hàng"
+            className="mb-2"
+            onChange={(e) => setCustomer({ ...customer, fullname: e.target.value })}
+            
+          />
+          <Form.Control
+            placeholder="Số Điện Thoại" 
+            className="mb-2"  
+            onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />
+
+          <Form.Control 
+            as="textarea" rows={2} 
+            placeholder="Địa Chỉ Nhận Hàng" 
+            className="mb-3" onChange={(e) => setCustomer({ ...customer, address: e.target.value })} />
 
           <h6>Chọn hình thức thanh toán</h6>
           <Form.Check

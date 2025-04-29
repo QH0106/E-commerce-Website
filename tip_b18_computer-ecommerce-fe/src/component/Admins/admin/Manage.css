@@ -1,0 +1,9 @@
+#button{
+    margin: auto;
+    margin-top: 10px;
+}
+
+.home {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}

@@ -58,7 +58,7 @@ const PurchaseHistoryPage = () => {
               )}
 
               <div>
-                <Card.Title>{order.items[0].productName}</Card.Title>
+                {/* <Card.Title>{order.items[0].productName}</Card.Title> */}
                 <Card.Text>Đơn hàng #{order.orderId}</Card.Text>
                 <Card.Text>Ngày đặt: {new Date(order.createdAt).toLocaleString()}</Card.Text>
                 <Badge bg={statusVariant[order.orderStatus.toLowerCase()] || "secondary"}>
@@ -118,8 +118,8 @@ const PurchaseHistoryPage = () => {
               </Table>
               <p><strong>Tổng cộng:</strong> {selectedOrder.totalAmount.toLocaleString()}₫</p>
               <hr />
-              <Button variant="success">Đánh giá sản phẩm</Button>{' '}
-              <Button variant="outline-secondary">Tải hoá đơn</Button>
+              {/* <Button variant="success">Đánh giá sản phẩm</Button>{' '} */}
+              {/* <Button variant="outline-secondary">Tải hoá đơn</Button> */}
             </>
           )}
         </Modal.Body>

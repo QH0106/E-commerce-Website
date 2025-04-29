@@ -36,15 +36,31 @@ const Login = () => {
       });
 
       if (response.data.statusCode === 200) {
-        const userData = response.data.data;
-        const { accessToken, ...userInfo } = userData;
+        const { accessToken } = response.data.data;
 
+        // Gắn token vào header
         setAuthToken(accessToken);
         localStorage.setItem("token", accessToken);
-        localStorage.setItem("currentUser", JSON.stringify(userInfo));
 
-        alert("Đăng nhập thành công!");
-        navigate("/HomePage");
+        // Gọi API lấy thông tin user và role
+        const infoResponse = await axiosInstance.get("/users/me");
+
+        if (infoResponse.data) {
+          const userInfo = infoResponse.data;
+          localStorage.setItem("currentUser", JSON.stringify(userInfo));
+
+          alert("Đăng nhập thành công!");
+
+          // Kiểm tra role
+          const roles = userInfo.roles || [];
+          if (roles.includes("ROLE_ADMIN")) {
+            navigate("/admin");
+          } else {
+            navigate("/HomePage");
+          }
+        } else {
+          alert("Lỗi khi lấy thông tin người dùng!");
+        }
       } else {
         alert(response.data.message || "Sai username hoặc mật khẩu!");
       }

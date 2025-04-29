@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../Author/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Carousel } from "react-bootstrap";
+import "react-toastify/dist/ReactToastify.css";
 import "../Css/ProDuct.css";
 
 const ProDuct = () => {
@@ -24,7 +26,7 @@ const ProDuct = () => {
   const addToCart = (product) => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     if (!currentUser) {
-      alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+      toast.warning("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
       return;
     }
 
@@ -37,11 +39,11 @@ const ProDuct = () => {
     axiosInstance
       .post("/carts/add", cartItem)
       .then(() => {
-        alert(`${product.name} đã thêm vào giỏ hàng!`);
+        toast.success(`${product.name} đã thêm vào giỏ hàng!`);
       })
       .catch((error) => {
         console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại!");
+        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
       });
   };
 
@@ -227,6 +229,7 @@ const ProDuct = () => {
           Xem Thêm
         </button>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

@@ -1,75 +1,86 @@
-import React, { useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
-// import axios from "axios";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../Author/axiosInstance";
 import { Container, Row, Col, Form, Button, Tab, Tabs } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-const UserProfilePage = () => {
+const ProfilePage = () => {
   const [key, setKey] = useState("info");
-  const [user, setUser] = useState({
-    name: "",
-    gender: "",
-    phone: "",
-    email: "",
-    birthdate: "",
+  const [userData, setUserData] = useState(null);
+  const [updateData, setUpdateData] = useState({});
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
   });
 
-  const handleSave = () => {
-    toast.success("Thông tin đã được lưu!");
+  useEffect(() => {
+    
+    axiosInstance.get("/users/me")
+      .then((res) => {
+        const userId = res.data.data.id;
+        axiosInstance.get(`/users/getById/${userId}`)
+          .then((res2) => {
+            setUserData(res2.data.data);
+            setUpdateData(res2.data.data);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Không lấy được thông tin người dùng");
+      });
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      await axiosInstance.put(`/users/update/${userData.id}`, updateData);
+      toast.success("Thông tin đã được lưu!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi khi lưu thông tin!");
+    }
   };
 
-// const handleSave = async () => {
-//   try {
-//     await axios.put("/user/update", user);
-//     toast.success(" Thông tin đã được lưu!");
-//   } catch (error) {
-//     toast.error(" Có lỗi xảy ra khi lưu!");
-//   }
-// };
+  const handleChangePassword = async () => {
+    try {
+      const payload = {
+        username: userData.username,  // thêm username từ dữ liệu hiện tại
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+      };
+  
+      await axiosInstance.post("/users/changePassword", payload);
+      toast.success("Đổi mật khẩu thành công!");
+      setPasswordData({ oldPassword: "", newPassword: "" });
+    } catch (error) {
+      toast.error("Đổi mật khẩu thất bại!", error);
+    }
+  };
+  
 
   const handleLogout = () => {
-    localStorage.removeItem("user")
+    localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
     toast.info("Đã đăng xuất!");
   };
 
-  // const handleLogout = async () => {
-  //   try {
-  //     await axios.post("/api/logout"); 
-  //     localStorage.removeItem("currentUser");
-  //     localStorage.removeItem("token");
-  //     toast.info(" Đã đăng xuất!");
-  //   } catch (error) {
-  //     toast.error(" Đăng xuất thất bại!");
-  //   }
-  // };
+  if (!userData) return <p>Đang tải dữ liệu...</p>;
 
   return (
     <Container className="py-5">
       <Row>
         <Col md={3} className="border-end">
-          <h5 className="fw-bold mb-4">👤 Nguyễn Văn A</h5>
-          <div
-            className={`mb-3 ${key === "info" ? "text-danger" : ""}`}
-            style={{ cursor: "pointer" }}
-            onClick={() => setKey("info")}
-          >
-            Thông tin tài Khoản
+          <h5 className="fw-bold mb-4">👤 {userData.username}</h5>
+          <div className={`mb-3 ${key === "info" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("info")}>
+            Thông tin tài khoản
           </div>
-          <div
-            className={`mb-3 ${key === "address" ? "text-danger" : ""}`}
-            style={{ cursor: "pointer" }}
-            onClick={() => setKey("address")}
-          >
-            Địa Chỉ
+          <div className={`mb-3 ${key === "address" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("address")}>
+            Địa chỉ
           </div>
-          <div
-            className={`mb-3 ${key === "orders" ? "text-danger" : ""}`}
-            style={{ cursor: "pointer" }}
-            onClick={() => setKey("orders")}
-          >
-            Theo dõi đơn hàng
+          <div className={`mb-3 ${key === "orders" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("orders")}>
+            Quản lý đơn hàng
+          </div>
+          <div className={`mb-3 ${key === "password" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("password")}>
+            Đổi mật khẩu
           </div>
           <div className="text-black" style={{ cursor: "pointer" }} onClick={handleLogout}>
             Đăng xuất
@@ -77,76 +88,73 @@ const UserProfilePage = () => {
         </Col>
 
         <Col md={9}>
-          <Tabs id="product-tabs" activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+          <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
             <Tab eventKey="info" title="Thông tin tài khoản">
               <Form>
                 <Form.Group className="mb-3">
-                  <Form.Label>Họ Tên</Form.Label>
+                  <Form.Label>Họ tên</Form.Label>
                   <Form.Control
-                    value={user.name}
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
+                    value={updateData.fullname || ""}
+                    onChange={(e) => setUpdateData({ ...updateData, fullname: e.target.value })}
                   />
                 </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Giới tính</Form.Label>
-                  <div>
-                    <Form.Check
-                      inline
-                      label="Nam"
-                      name="gender"
-                      type="radio"
-                      checked={user.gender === "male"}
-                      onChange={() => setUser({ ...user, gender: "male" })}
-                    />
-                    <Form.Check
-                      inline
-                      label="Nữ"
-                      name="gender"
-                      type="radio"
-                      checked={user.gender === "female"}
-                      onChange={() => setUser({ ...user, gender: "female" })}
-                    />
-                  </div>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Số điện thoại</Form.Label>
-                  <Form.Control
-                    value={user.phone}
-                    onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  />
-                </Form.Group>
-
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
-                    value={user.email}
-                    onChange={(e) => setUser({ ...user, email: e.target.value })}
+                    value={updateData.email || ""}
+                    onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })}
                   />
                 </Form.Group>
-
                 <Form.Group className="mb-3">
-                  <Form.Label>Ngày sinh</Form.Label>
+                  <Form.Label>Số điện thoại</Form.Label>
                   <Form.Control
-                    type="date"
-                    value={user.birthdate}
-                    onChange={(e) => setUser({ ...user, birthdate: e.target.value })}
+                    value={updateData.phone || ""}
+                    onChange={(e) => setUpdateData({ ...updateData, phone: e.target.value })}
                   />
                 </Form.Group>
-
                 <Button variant="danger" onClick={handleSave}>
                   Lưu
                 </Button>
               </Form>
             </Tab>
 
-            <Tab eventKey="address" title="Địa Chỉ">
-              <p>Hiển thị hoặc chỉnh sửa địa chỉ giao hàng tại đây.</p>
+            <Tab eventKey="address" title="Địa chỉ">
+              <Form.Group className="mb-3">
+                <Form.Label>Địa chỉ giao hàng</Form.Label>
+                <Form.Control
+                  value={updateData.address || ""}
+                  onChange={(e) => setUpdateData({ ...updateData, address: e.target.value })}
+                />
+              </Form.Group>
+              <Button variant="danger" onClick={handleSave}>
+                Cập nhật địa chỉ
+              </Button>
             </Tab>
 
-            <Tab eventKey="orders" title="Quản lý đơn hàng">
-              <p>Xem lịch sử hoặc trạng thái đơn hàng.</p>
+            <Tab eventKey="orders" title="Đơn hàng">
+              <p>Xem và quản lý đơn hàng của bạn ở đây.</p>
+            </Tab>
+
+            <Tab eventKey="password" title="Đổi mật khẩu">
+              <Form.Group className="mb-3">
+                <Form.Label>Mật khẩu cũ</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={passwordData.oldPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Mật khẩu mới</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                />
+              </Form.Group>
+              <Button variant="danger" onClick={handleChangePassword}>
+                Đổi mật khẩu
+              </Button>
             </Tab>
           </Tabs>
         </Col>
@@ -156,4 +164,4 @@ const UserProfilePage = () => {
   );
 };
 
-export default UserProfilePage;
+export default ProfilePage;

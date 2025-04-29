@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Admin from "./component/Admins/Admin";
 import ProductManagement from "./component/Admins/ProductManagement";
+import UserManagement from "./component/Admins/UserManagement";
+import CategoriesManagement from "./component/Admins/CategoriesManagement";
+import OrderManagement from "./component/Admins/OrderManagement";
+import { ProductI3, ProductI5, ProductI7, ProfilePage,
+PurchaseHistoryPage, ConfirmOrderPage, Cart, Detail, ProDuct,
+HomePage, Login, Register, Forgotpassword } from "./component/Router";
 import MainLayout from "./component/modules/MainLayout";
-import { ProductI3, ProductI5, ProductI7, ProfilePage, PurchaseHistoryPage, 
-ConfirmOrderPage, OAuth2RedirectHandler, Cart, Detail, ProDuct, HomePage,
-Login, Register, Forgotpassword } from "./component/Pages";
 import { setAuthToken } from "./component/Author/axiosInstance";
+
 
 function App() {
     const [cart, setCart] = useState([]);
@@ -36,11 +40,13 @@ function App() {
         </Route>
         
         <Route path="/login" element={<Login />} />
-        <Route path="/OAuth2RedirectHandler" element={<OAuth2RedirectHandler/>} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Forgotpassword" element={<Forgotpassword />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/ProductManagement" element={<ProductManagement />} />
+        <Route path="/UserManagement" element={<UserManagement />} />
+        <Route path="/CategoriesManagement" element={<CategoriesManagement />} />
+        <Route path="/OrderManagement" element={<OrderManagement />} />
         
       </Routes>
     </div>

@@ -1,0 +1,13 @@
+export { default as ProductI3 } from "../Pages/ProductI3";
+export { default as ProductI5 } from "../Pages/ProductI5";
+export { default as ProductI7 } from "../Pages/ProductI7";
+export { default as ConfirmOrderPage } from "../Pages/ConfirmOrderPage";
+export { default as PurchaseHistoryPage } from "../Pages/PurchaseHistoryPage";
+export { default as ProfilePage } from "../Pages/ProfilePage";
+export { default as Cart } from "../Pages/Cart";
+export { default as Detail } from "../Pages/Detail";
+export { default as ProDuct } from "../Pages/ProDuct";
+export { default as HomePage } from "../Pages/HomePage";
+export { default as Login } from "../Pages/Login";
+export { default as Register } from "../Pages/Register";
+export { default as Forgotpassword } from "../Pages/Forgotpassword";

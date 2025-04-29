@@ -4,6 +4,8 @@ import { Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import "../Css/Homepage.css";
 import axiosInstance from "../Author/axiosInstance";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const HomePage = () => {
   // const [cart, setCart] = useState([]);
@@ -12,7 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get("/products/getAllProducts");
+        const response = await axiosInstance.get("/products/getAllProducts?page=1&size=100");
         setProducts(response.data); 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -27,7 +29,7 @@ const HomePage = () => {
 const addToCart = (product) => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (!currentUser) {
-    alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    toast.warning("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
     return;
   }
 
@@ -39,11 +41,11 @@ const addToCart = (product) => {
 
   axiosInstance.post("/carts/add", cartItem)
     .then(() => {
-      alert(`${product.name} đã thêm vào giỏ hàng!`);
+      toast.success(`${product.name} đã thêm vào giỏ hàng!`);
     })
     .catch((error) => {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
-      alert("Có lỗi xảy ra, vui lòng thử lại!");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại!");
     });
 };
    
@@ -93,7 +95,7 @@ const addToCart = (product) => {
           <div className="container mt-3">
             <h2 style={{color:"#000", }}>Sản phẩm nổi bật</h2>
             <div className="row">
-              {products.slice(0, 4).map((product) => (
+              {products.slice(0, 5).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
                     <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
@@ -116,7 +118,7 @@ const addToCart = (product) => {
           <div className="container mt-3">
             <h2 style={{color:"#000", }}>Sản phẩm khuyến mãi</h2>
             <div className="row">
-              {products.slice(0, 5).map((product) => (
+              {products.slice(5, 20).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px"}}>
                   <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
@@ -136,6 +138,7 @@ const addToCart = (product) => {
         </div>
       </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
