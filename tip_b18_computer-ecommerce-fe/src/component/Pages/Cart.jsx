@@ -215,33 +215,15 @@ const CartPage = () => {
 
   const qrImageUrl = `https://qr.sepay.vn/img?acc=38329112004&bank=TPB&amount=${total}&des=${orderId}`;
 
-  if (loading) return 
-  <div style={{height:"100vh", backgroundColor:"gray"}}>
-    <div class="spinner-grow text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-secondary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-success" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-danger" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-warning" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-info" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-light" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div class="spinner-grow text-dark" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>;
+  if (loading) {
+    return (
+      <div style={{ height: "100vh", backgroundColor: "gray" }} className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-light" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }  
 
   return (
     <Container className="py-5">
@@ -270,19 +252,47 @@ const CartPage = () => {
                 />
               </Col>
               <Col xs={2}><Image src={item.thumbnail} thumbnail /></Col>
-              <Col xs={5}>{item.name}</Col>
+              <Col xs={4}>{item.name}</Col>
               <Col xs={2}>
                 <div className="text-danger fw-bold">{item.price.toLocaleString()}₫</div>
               </Col>
-              <Col xs={1}>
-                  <InputGroup size="sm">
-                    <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, -1)}>-</Button>
-                    <Form.Control value={item.quantity} readOnly style={{ width: "40px", textAlign: "center" }} />
-                    <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, 1)}>+</Button>
-                  </InputGroup>
+              <Col xs= "auto">
+              <div className="d-flex align-items-center">
+                <Button
+                  variant="light"
+                  size="sm"
+                  onClick={() => handleQuantityChange(item.id, -1)}
+                  disabled={item.quantity <= 1}
+                  style={{ border: "1px solid #ced4da", borderRadius: "1rem 0 0 1rem", margin:"auto" }}
+                >
+                  <i className="fas fa-minus" />
+                </Button>
+
+                <div
+                  style={{
+                    width: "40px",
+                    height:"30px",
+                    textAlign: "center",
+                    borderTop: "1px solid #ced4da",
+                    borderBottom: "1px solid #ced4da",
+                  }}
+                >
+                  {item.quantity}
+                </div>
+
+                <Button
+                  variant="light"
+                  size="sm"
+                  onClick={() => handleQuantityChange(item.id, 1)}
+                  style={{ border: "1px solid #ced4da", borderRadius: "0 1rem 1rem 0", margin:"auto"}}
+                >
+                  <i className="fas fa-plus" />
+                </Button>
+              </div>
+
               </Col>
               <Col xs={1}>
-                <Button variant="link" className="text-danger" onClick={() => handleRemoveItem(item.cartItemId)}>
+                <Button variant="link" className="text-danger" style={{margin:"auto"}} onClick={() => handleRemoveItem(item.cartItemId)}>
                   <i className="fa-solid fa-trash"></i>
                 </Button>
               </Col>

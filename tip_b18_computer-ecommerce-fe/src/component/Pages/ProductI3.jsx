@@ -11,7 +11,7 @@ const ProductI3 = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
-  const pageSize = 10;
+  const pageSize = 100;
 
   useEffect(() => {
     axiosInstance

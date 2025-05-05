@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Form, Modal, Pagination } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash, FaArrowAltCircleLeft } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaArrowAltCircleLeft, FaImage } from 'react-icons/fa';
 import { Link } from 'react-router';
 import axiosInstance from '../Author/axiosInstance';
 import './admin/Manage.css'
@@ -12,10 +12,23 @@ const ProductManagement = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState({ name: '', sku: '', description: '', brand: '', price: '', quantity: '', thumbnail:''  });
   const [categories, setcategories] = useState([]);
-
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadData, setUploadData] = useState({
+    productId: '',
+    thumbnail: null,
+    images: []
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
+const openUploadModal = (productId) => {
+  setUploadData({
+    productId,
+    thumbnail: null,
+    images: []
+  });
+  setShowUploadModal(true);
+};
 
   useEffect(() => {
     axiosInstance.get(apiUrl)
@@ -70,19 +83,6 @@ const ProductManagement = () => {
       })
       .catch(error => console.error('Error deleting product:', error));
   };
-  
-  const handleShowupload = (product = {
-    id: '',
-    thumbnail: '',
-    images: '',
-    featured: false
-  }) => {
-    setCurrentProduct(product);
-    setIsEditing(product.id);
-    setShow(true);
-  }
-
-
 
   // Mở modal để thêm mới hoặc chỉnh sửa sản phẩm
   const handleShowModal = (product = {
@@ -111,6 +111,25 @@ const ProductManagement = () => {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleUploadImages = async () => {
+    const formData = new FormData();
+    formData.append('thumbnail', uploadData.thumbnail);
+    for (let i = 0; i < uploadData.images.length; i++) {
+      formData.append('images', uploadData.images[i]);
+    }
+  
+    try {
+      await axiosInstance.put(`/products/${uploadData.productId}/upload`, formData );
+      alert("Upload ảnh thành công!");
+      setShowUploadModal(false);
+      const res = await axiosInstance.get('/products/getAllProducts');
+      setProducts(res.data);
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Lỗi khi upload ảnh');
+    }
+  };
 
   return (
     <Container>
@@ -152,7 +171,7 @@ const ProductManagement = () => {
               <td>{product.quantity}</td>
               <td>{product.price}</td>
               <td>
-              <Button variant="warning" onClick={() => handleShowupload(product)}  id='button' className="me-2"><FaEdit /> upload ảnh</Button>
+              <Button variant="info" onClick={() => openUploadModal(product.id)} id='button' className="me-2"><FaImage /> Upload ảnh</Button>
               <Button variant="warning" onClick={() => handleShowModal(product)}  id='button' className="me-2"><FaEdit /> Sửa</Button>
               <Button variant="danger" onClick={() => handleDelete(product.id)} id='button'  className="me-2"><FaTrash /> Xóa</Button>
               </td>
@@ -269,8 +288,6 @@ const ProductManagement = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-
-
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -280,7 +297,44 @@ const ProductManagement = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Upload ảnh sản phẩm</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group>
+            <Form.Label>Ảnh chính (thumbnail)</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setUploadData({ ...uploadData, thumbnail: e.target.files[0] })
+              }
+            />
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Ảnh phụ (nhiều ảnh)</Form.Label>
+            <Form.Control
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) =>
+                setUploadData({ ...uploadData, images: e.target.files })
+              }
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Hủy</Button>
+        <Button variant="primary" onClick={handleUploadImages}>Tải lên</Button>
+      </Modal.Footer>
+    </Modal>
+
     </Container>
+    
   );
 };
 

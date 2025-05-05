@@ -86,39 +86,46 @@ const ProductDetail = () => {
       });
   };
 
-  if (!product) return <p>Đang tải sản phẩm...</p>;
+  if (!product) {
+    return (
+      <div style={{ height: "100vh", backgroundColor: "gray" }} className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-light" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Container className="py-5">
       <Row>
-      <Col md={4}>
-      <Row>
-        <InnerImageZoom
-          src={mainImage}
-          zoomSrc={mainImage}
-          zoomType="hover"
-          zoomScale={1.5}
-          alt={product.name}
-        />
-      </Row>
-      <Row className="mt-3">
-        <Slider {...sliderSettings}>
-          {[product.thumbnail, ...(product.images || [])].filter(Boolean).map((img, index) => (
-            <div key={index} style={{ padding: "0 5px" }}>
-              <Image
-                src={img}
-                thumbnail
-                onClick={() => setMainImage(img)} 
-                style={{ cursor: "pointer", border: mainImage === img ? "2px solid orange" : "" }}
-              />
-            </div>
-          ))}
-        </Slider>
-      </Row>
-    </Col>
-
-
-        <Col md={8}>
+        <Col md={4}>
+          <Row>
+            <InnerImageZoom
+              src={mainImage}
+              zoomSrc={mainImage}
+              zoomType="hover"
+              zoomScale={1.5}
+              alt={product.name}
+            />
+          </Row>
+          <Row className="mt-1">
+            <Slider {...sliderSettings}>
+              {[product.thumbnail, ...(product.images || [])].filter(Boolean).map((img, index) => (
+                <div key={index} style={{ padding: "0 5px" }}>
+                  <Image
+                    src={img}
+                    thumbnail
+                    onClick={() => setMainImage(img)} 
+                    style={{ cursor: "pointer", border: mainImage === img ? "2px solid orange" : "" }}
+                  />
+                </div>
+              ))}
+            </Slider>
+          </Row>
+        </Col>
+        <Col md={1}></Col>
+        <Col md={6}>
           <h4>{product.name}</h4>
           <h5>Hãng: {product.brand}</h5>
           <h5>Số lượng: {product.quantity}</h5>
@@ -154,9 +161,9 @@ const ProductDetail = () => {
             <h6>ƯU ĐÃI KHI MUA KÈM PC:</h6>
             <p>"MÁY BỘ STAR HIỆU SUẤT CAO GIÁ SIÊU HỜI" Tại đây Đến 31.12.2025
                 <br />
-                🎁 TẶNG BỘ QUÀ Trị giá 220.000đ Tại đây gồm:
+                 TẶNG BỘ QUÀ Trị giá 220.000đ Tại đây gồm:
                 <ul>
-                  <li>✅ Chuột Motospeed F333 Black <a href="#">https</a></li>
+                  <li>✅ Chuột Motospeed F333 Black <a href="/">https</a></li>
                   <li>✅ Bàn phím Motospeed K103 Black</li>
                   <li>✅ Miếng lót Chuột Star cao cấp</li>
                 </ul>

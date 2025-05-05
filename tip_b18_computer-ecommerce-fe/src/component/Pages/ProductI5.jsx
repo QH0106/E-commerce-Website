@@ -79,7 +79,7 @@ const ProductI5Page = () => {
             value={sortOption}
             onChange={(e) => {
               setSortOption(e.target.value);
-              setPage(1); // reset về trang đầu khi sắp xếp lại
+              setPage(1);
             }}
           >
             <option value="name">Sắp xếp theo tên (A-Z)</option>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Author/axiosInstance";
 import { Container, Row, Col, Form, Button, Tab, Tabs } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -9,6 +10,7 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [updateData, setUpdateData] = useState({});
   const [passwordData, setPasswordData] = useState({
+    username:"",
     oldPassword: "",
     newPassword: "",
   });
@@ -43,18 +45,19 @@ const ProfilePage = () => {
   const handleChangePassword = async () => {
     try {
       const payload = {
-        username: userData.username,  // thêm username từ dữ liệu hiện tại
+        username: userData.username,
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword,
       };
-  
-      await axiosInstance.post("/users/changePassword", payload);
+      await axiosInstance.put("/users/changePassword",payload );
       toast.success("Đổi mật khẩu thành công!");
       setPasswordData({ oldPassword: "", newPassword: "" });
     } catch (error) {
-      toast.error("Đổi mật khẩu thất bại!", error);
+      toast.error("Đổi mật khẩu thất bại!");
+      console.error("Change password error:", error);
     }
   };
+  
   
 
   const handleLogout = () => {
@@ -63,7 +66,15 @@ const ProfilePage = () => {
     toast.info("Đã đăng xuất!");
   };
 
-  if (!userData) return <p>Đang tải dữ liệu...</p>;
+  if (!userData) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Đang tải dữ liệu...</span>
+        </Spinner>
+      </div>
+    );
+  }
 
   return (
     <Container className="py-5">
@@ -136,6 +147,14 @@ const ProfilePage = () => {
             </Tab>
 
             <Tab eventKey="password" title="Đổi mật khẩu">
+            <Form.Group className="mb-3">
+                <Form.Label>Tên tài khoản</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={userData.username}
+                  onChange={(e) => setPasswordData({ ...userData.username, username: e.target.value })}
+                />
+              </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label>Mật khẩu cũ</Form.Label>
                 <Form.Control

@@ -24,12 +24,10 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-// const filteredProducts = products
-
 const addToCart = (product) => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (!currentUser) {
-    toast.warning("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
     return;
   }
 
