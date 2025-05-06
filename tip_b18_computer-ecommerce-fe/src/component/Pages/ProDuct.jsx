@@ -14,7 +14,7 @@ const ProDuct = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/products/getAllProducts?page=1&size=10&sort=false&sortBy=name")
+      .get("/products/getAllProducts?page=1&size=100")
       .then((response) => {
         setProducts(response.data);
       })
@@ -61,8 +61,12 @@ const ProDuct = () => {
     p.name.toLowerCase().includes("i7")
   );
 
+  const productsI9 = filteredProducts.filter((p) =>
+    p.name.toLowerCase().includes("i9")
+  );
+
   return (
-    <div className="PageHm container-fluid">
+    <div className="PagePd">
       <div className="bannerH">
         <div className="slideshow">
           <Carousel className="slide">
@@ -104,6 +108,7 @@ const ProDuct = () => {
         <select
           className="form-select w-25"
           onChange={(e) => setSort(e.target.value)}
+          style={{marginBottom:"30px"}}
         >
           <option value="asc">Giá tăng dần</option>
           <option value="desc">Giá giảm dần</option>
@@ -111,125 +116,184 @@ const ProDuct = () => {
       </div>
 
       {/* Section I3 */}
-      <div className="row mt-4">
-        <h2 style={{ color: "#000" }}>I3</h2>
-        {productsI3.slice(0, 8).map((product) => (
-          <div key={product.id} className="col-md-3 mb-3">
-            <div
-              className="card p-3"
-              onClick={() => navigate(`/Detail/${product.id}`)}
-              style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
-            >
-              <img
-                className="card-img-top"
-                src={product.thumbnail || product.image}
-                alt={product.name}
-              />
-              <h5>{product.name}</h5>
-              <p style={{ color: "#000000" }}>{product.brand}</p>
-              <p style={{ color: "red" }}>
-                Giá: {product.price.toLocaleString("vi-VN")}₫
-              </p>
+      <h2>Intel Core i3</h2>
+      <div className="Pd"style={{justifyItems:"center"}}>
+        <div className="container row mt-3">
+              {productsI3.slice(0, 8).map((product) => (
+                <div key={product.id} className="col-md-3 mb-3">
+                  <div
+                    className="card p-3"
+                    onClick={() => navigate(`/Detail/${product.id}`)}
+                    style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={product.thumbnail || product.image}
+                      alt={product.name}
+                    />
+                    <h5>{product.name}</h5>
+                    <p style={{ color: "#000000" }}>{product.brand}</p>
+                    <p style={{ color: "red" }}>
+                      Giá: {product.price.toLocaleString("vi-VN")}₫
+                    </p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
+                    </button>
+                  </div>
+                </div>
+                ))}
+            <div className="text-center mt-3">
               <button
-                className="btn btn-danger"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product);
-                }}
+                onClick={() => navigate("/ProductI3")}
+                className="load btn btn-primary"
               >
-                Thêm vào giỏ hàng
+                Xem Thêm
               </button>
             </div>
-          </div>
-        ))}
-        <button
-          onClick={() => navigate("/ProductI3")}
-          className="load btn btn-primary"
-        >
-          Xem Thêm
-        </button>
+        </div>
       </div>
 
       {/* Section I5 */}
-      <div className="row mt-4">
-        <h2 style={{ color: "#000" }}>I5</h2>
-        {productsI5.slice(0, 8).map((product) => (
-          <div key={product.id} className="col-md-3 mb-3">
-            <div
-              className="card p-3"
-              onClick={() => navigate(`/Detail/${product.id}`)}
-              style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
-            >
-              <img
-                className="card-img-top"
-                src={product.thumbnail || product.image}
-                alt={product.name}
-              />
-              <h5>{product.name}</h5>
-              <p style={{ color: "#000000" }}>{product.brand}</p>
-              <p style={{ color: "red" }}>
-                Giá: {product.price.toLocaleString("vi-VN")}₫
-              </p>
+      <h2 style={{marginTop:"10px"}}>Intel Core i5</h2>
+      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div className="container row mt-3">
+              {productsI5.slice(0, 8).map((product) => (
+                <div key={product.id} className="col-md-3 mb-3">
+                  <div
+                    className="card p-3"
+                    onClick={() => navigate(`/Detail/${product.id}`)}
+                    style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={product.thumbnail || product.image}
+                      alt={product.name}
+                    />
+                    <h5>{product.name}</h5>
+                    <p style={{ color: "#000000" }}>{product.brand}</p>
+                    <p style={{ color: "red" }}>
+                      Giá: {product.price.toLocaleString("vi-VN")}₫
+                    </p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
+                    </button>
+                  </div>
+                </div>
+                ))}
+            <div className="text-center mt-3">
               <button
-                className="btn btn-danger"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product);
-                }}
+                onClick={() => navigate("/ProductI3")}
+                className="load btn btn-primary"
               >
-                Thêm vào giỏ hàng
+                Xem Thêm
               </button>
             </div>
-          </div>
-        ))}
-        <button
-          onClick={() => navigate("/ProductI5")}
-          className="load btn btn-primary"
-        >
-          Xem Thêm
-        </button>
+        </div>
       </div>
 
       {/* Section I7 */}
-      <div className="row mt-4">
-        <h2 style={{ color: "#000" }}>I7</h2>
-        {productsI7.slice(0, 8).map((product) => (
-          <div key={product.id} className="col-md-3 mb-3">
-            <div
-              className="card p-3"
-              onClick={() => navigate(`/Detail/${product.id}`)}
-              style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
-            >
-              <img
-                className="card-img-top"
-                src={product.thumbnail || product.image}
-                alt={product.name}
-              />
-              <h5>{product.name}</h5>
-              <p style={{ color: "#000000" }}>{product.brand}</p>
-              <p style={{ color: "red" }}>
-                Giá: {product.price.toLocaleString("vi-VN")}₫
-              </p>
+      <h2 style={{marginTop:"10px"}}>Intel Core i7</h2>
+      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div className="container row mt-3">
+              {productsI7.slice(0, 8).map((product) => (
+                <div key={product.id} className="col-md-3 mb-5">
+                  <div
+                    className="card p-3"
+                    onClick={() => navigate(`/Detail/${product.id}`)}
+                    style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={product.thumbnail || product.image}
+                      alt={product.name}
+                    />
+                    <h5>{product.name}</h5>
+                    <p style={{ color: "#000000" }}>{product.brand}</p>
+                    <p style={{ color: "red" }}>
+                      Giá: {product.price.toLocaleString("vi-VN")}₫
+                    </p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
+                    </button>
+                  </div>
+                </div>
+                ))}
+            <div className="text-center mt-3">
               <button
-                className="btn btn-danger"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product);
-                }}
+                onClick={() => navigate("/ProductI3")}
+                className="load btn btn-primary"
               >
-                Thêm vào giỏ hàng
+                Xem Thêm
               </button>
             </div>
-          </div>
-        ))}
-        <button
-          onClick={() => navigate("/ProductI7")}
-          className="load btn btn-primary"
-        >
-          Xem Thêm
-        </button>
+        </div>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
+      
+      {/* Section I9 */}
+      <h2 style={{marginTop:"10px"}}>Intel Core i9</h2>
+      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div className="container row mt-3">
+              {productsI9.slice(0, 8).map((product) => (
+                <div key={product.id} className="col-md-3 mb-3">
+                  <div
+                    className="card p-3"
+                    onClick={() => navigate(`/Detail/${product.id}`)}
+                    style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={product.thumbnail || product.image}
+                      alt={product.name}
+                    />
+                    <h5>{product.name}</h5>
+                    <p style={{ color: "#000000" }}>{product.brand}</p>
+                    <p style={{ color: "red" }}>
+                      Giá: {product.price.toLocaleString("vi-VN")}₫
+                    </p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
+                    </button>
+                  </div>
+                </div>
+                ))}
+            <div className="text-center mt-3">
+              <button
+                onClick={() => navigate("/ProductI3")}
+                className="load btn btn-primary"
+              >
+                Xem Thêm
+              </button>
+            </div>
+        </div>
+      </div>
+      
+
+      
+      <ToastContainer position="top-center" autoClose={1000} />
     </div>
   );
 };

@@ -49,9 +49,7 @@ const addToCart = (product) => {
    
   return (
     <div className="PageHm">
-      {/* Header */} 
       <div className="bannerH">
-        {/* slide show */}
         <div className="slideshow">
           <Carousel className="slide">
             <Carousel.Item>
@@ -93,7 +91,7 @@ const addToCart = (product) => {
           <div className="container mt-3">
             <h2 style={{color:"#000", }}>Sản phẩm nổi bật</h2>
             <div className="row">
-              {products.slice(0, 5).map((product) => (
+              {products.slice(0, 6).map((product) => (
                 <div key={product.name} className="col-md-3">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px", textDecoration: "none"}}>
                     <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
@@ -109,15 +107,15 @@ const addToCart = (product) => {
                   </div>
                 </div>
               ))}
-            </div>
+          </div>
         </div>
 
         <div>
           <div className="container mt-3">
             <h2 style={{color:"#000", }}>Sản phẩm khuyến mãi</h2>
             <div className="row">
-              {products.slice(5, 20).map((product) => (
-                <div key={product.name} className="col-md-3">
+              {products.slice(7, 15).map((product) => (
+                <div key={product.name} className="col-md-2">
                   <div className="card p-3" style={{backgroundColor: "#F8F4F4", marginTop:"10px"}}>
                   <Link to={`/Detail/${product.id}`}><img className="card-img-top" src={product.thumbnail} alt="{product.img}" /></Link>
                     <h5>{product.name}</h5>
@@ -126,7 +124,7 @@ const addToCart = (product) => {
                       <p style={{color: "#BC1616"}}>{product.sale}</p>
                     </div>
                     <p style={{color: "red",}}>Giá: {product.price}</p>
-                    <button className="btncard" onClick={() => addToCart(product)}>
+                    <button className="btncard" style={{margin:"únet"}} onClick={() => addToCart(product)}>
                       Thêm vào giỏ hàng
                     </button>
                   </div>

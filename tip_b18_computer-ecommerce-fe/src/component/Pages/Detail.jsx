@@ -15,6 +15,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [quantity ,setQuantity] = useState(1)
   const [reviewForm, setReviewForm] = useState({ name: "", comment: "" });
   const { id } = useParams();
 
@@ -73,7 +74,7 @@ const ProductDetail = () => {
     const cartItem = {
       userId: currentUser.id,
       productId: product.id,
-      quantity: 1,
+      quantity: quantity,
     };
 
     axiosInstance.post("/carts/add", cartItem)
@@ -140,7 +141,14 @@ const ProductDetail = () => {
           <Form.Group as={Row} className="align-items-center">
             <Form.Label column sm="3">Số lượng</Form.Label>
             <Col sm="9">
-              <Form.Control type="number" defaultValue={1} min={1} style={{ width: "80px" }} />
+              <Form.Control 
+                type="number" 
+                defaultValue={1} 
+                value={quantity} 
+                min={1} 
+                style={{ width: "80px" }}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
             </Col>
           </Form.Group>
 

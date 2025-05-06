@@ -51,6 +51,18 @@ const Navbar = () => {
     fetchUserInfo();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearch(value);
@@ -74,7 +86,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-danger px-3">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-danger px-3 navbar-sticky">
       <a className="navbar-brand fw-bold" href="/HomePage" style={{ marginLeft: "100px", fontSize: "25px" }}>
         ComputerShop
       </a>
@@ -87,13 +99,14 @@ const Navbar = () => {
         aria-controls="mainNavbar"
         aria-expanded="false"
         aria-label="Toggle navigation"
+        style={{margin:"auto"}}
       >
         <span className="navbar-toggler-icon"></span>
       </button>
 
       <div className="collapse navbar-collapse" id="mainNavbar">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0" style={{ margin: "auto", gap: "20px" }}>
-          {/* PC dropdown */}
+          
           <li className="nav-item dropdown">
             <a className="nav-link dropdown-toggle" href="/ProDuct" id="pcDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               PC
@@ -106,7 +119,7 @@ const Navbar = () => {
             </ul>
           </li>
 
-          {/* Laptop */}
+          
           <li className="nav-item dropdown">
             <a className="nav-link dropdown-toggle" href="#" id="laptopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Laptop
@@ -118,7 +131,7 @@ const Navbar = () => {
             </ul>
           </li>
 
-          {/* Gear */}
+      
           <li className="nav-item dropdown">
             <a className="nav-link dropdown-toggle" href="#" id="gearDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Gear
@@ -131,36 +144,36 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Search bar */}
-        <div className="d-flex me-2 position-relative" ref={searchRef} style={{ width: "500px", paddingRight: "50px" }}>
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Tìm kiếm sản phẩm..."
-            aria-label="Search"
-            value={search}
-            onChange={handleSearch}
-          />
+        <div className="d-flex flex-column flex-lg-row align-items-center w-100">
+          <div className="me-lg-2 flex-grow-1 position-relative" ref={searchRef} style={{left:"10px"}}>
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={search}
+              onChange={handleSearch}
+              
+            />
+            {suggestions.length > 0 && (
+              <div className="search-suggestions bg-white">
+                {suggestions.map((item) => (
+                  <div key={item.id} className="suggestion-item">
+                    <a href={`/Detail/${item.id}`}>
+                      <img src={item.thumbnail} alt={item.name} width="40" height="40" style={{marginRight:"20px"}}/>
+                      <span>{item.name}</span>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Gợi ý */}
-        {suggestions.length > 0 && (
-          <div className="search-suggestions position-absolute bg-white">
-            {suggestions.map((item) => (
-              <div key={item.id} className="suggestion-item">
-                <a href={`/Detail/${item.id}`}>
-                  <img src={item.thumbnail} alt={item.name} width="40" height="40" />
-                  <span>{item.name}</span>
-                </a>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Cart + User */}
         <div className="d-flex align-items-center ms-2 gap-4" style={{ marginRight: "50px" }}>
           <a href="/Cart">
-            <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white" }}></i>
+            <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white"}}></i>
             {cart.length > 0 && <span>{cart.length}</span>}
           </a>
 

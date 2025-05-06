@@ -5,20 +5,22 @@ import { FaEdit, FaArrowAltCircleLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const orderStatuses = ["PENDING", "CONFIRMED", "SHIPPING", "CANCELLED", "DELIVERED", "COMPLETED"];
+const paymentStatuses = ["UNPAID", "PAID"];
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterPaymentStatus, setFilterPaymentStatus] = useState('');
   const [show, setShow] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 10;
 
-  const fetchOrders = (status = '') => {
+  const fetchOrders = (orderStatus = '', paymentStatus = '') => {
     let url = `/orders/getAllOrders?page=1&size=100`;
-    if (status) {
-      url += `&orderStatus=${status}`;
-    }
+    if (orderStatus) url += `&orderStatus=${orderStatus}`;
+    if (paymentStatus) url += `&paymentStatus=${paymentStatus}`;
+    
     axiosInstance.get(url)
       .then(res => setOrders(res.data.data || []))
       .catch(err => console.error("Lỗi lấy đơn hàng:", err));
@@ -26,8 +28,10 @@ const OrderManagement = () => {
   
 
   useEffect(() => {
-    fetchOrders()
-  }, []);
+    fetchOrders(filterStatus, filterPaymentStatus);
+  }, [filterStatus, filterPaymentStatus]);
+  
+  
   
 
   const handleOpenModal = (order) => {
@@ -37,7 +41,8 @@ const OrderManagement = () => {
 
   const handleStatusUpdate = () => {
     axiosInstance.put(`/orders/${selectedOrder.orderId}/status`, {
-      orderStatus: selectedOrder.orderStatus
+      orderStatus: selectedOrder.orderStatus,
+      paymentStatus: selectedOrder.paymentStatus
     })
       .then(() => {
         alert("Cập nhật trạng thái thành công!");
@@ -62,16 +67,36 @@ const OrderManagement = () => {
       <Link to="/Admin"><h2 style={{paddingTop:"20px"}}><FaArrowAltCircleLeft /> Admin</h2></Link>
       <h2>Quản lý đơn hàng</h2>
 
-      <Form.Select
-        className="mb-3 mt-3"
-        value={filterStatus}
-        onChange={handleFilterChange}
-      >
-        <option value="">-- Chọn trạng thái đơn hàng --</option>
-        {orderStatuses.map(status => (
-          <option key={status} value={status}>{status}</option>
-        ))}
-      </Form.Select>
+      <div className='d-flex col-5'>
+        <Form.Select
+          className="mb-3"
+          value={filterStatus}
+          onChange={handleFilterChange}
+        >
+          <option value="">-- Chọn trạng thái đơn hàng --</option>
+          {orderStatuses.map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </Form.Select>
+
+        <Form.Select
+          className="mb-3"
+          style={{marginLeft:"10px"}}
+          value={filterPaymentStatus}
+          onChange={(e) => {
+            const status = e.target.value;
+            setFilterPaymentStatus(status);
+            setCurrentPage(1);
+            fetchOrders(filterStatus, status);
+          }}
+        >
+          <option value="">-- Chọn trạng thái thanh toán --</option>
+          {paymentStatuses.map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </Form.Select>
+      </div>
+
 
       <Table striped bordered hover>
         <thead style={{ textAlign: 'center' }}>
@@ -95,7 +120,7 @@ const OrderManagement = () => {
               <td>{order.paymentStatus}</td>
               <td>{order.totalAmount.toLocaleString()} đ</td>
               <td>
-                <Button variant="warning" onClick={() => handleOpenModal(order)}>
+                <Button variant="warning" style={{margin:"auto"}} onClick={() => handleOpenModal(order)}>
                   <FaEdit /> Cập nhật
                 </Button>
               </td>
@@ -141,6 +166,14 @@ const OrderManagement = () => {
                 onChange={(e) => setSelectedOrder({ ...selectedOrder, orderStatus: e.target.value })}
               >
                 {orderStatuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </Form.Select>
+              <Form.Select
+                value={selectedOrder.paymentStatus}
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, paymentStatus: e.target.value })}
+              >
+                {paymentStatuses.map(status => (
                   <option key={status} value={status}>{status}</option>
                 ))}
               </Form.Select>

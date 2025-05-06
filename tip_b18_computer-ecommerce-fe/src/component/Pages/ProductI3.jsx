@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Author/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import {Container, Row, Col, Card, Button, Pagination, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Pagination,
+  Form,
+  Spinner,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../Css/productI.css";
 
 const ProductI3 = () => {
   const [products, setProducts] = useState([]);
@@ -10,17 +20,21 @@ const ProductI3 = () => {
   const [sortOption, setSortOption] = useState("name");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [imageLoaded, setImageLoaded] = useState({});
   const navigate = useNavigate();
   const pageSize = 100;
+  const placeholderImage = "/unnamed.png";
 
   useEffect(() => {
     axiosInstance
-      .get(`/products/getAllProducts?page=${page}&size=${pageSize}&sort=false&sortBy=name`)
+      .get(
+        `/products/getAllProducts?page=${page}&size=${pageSize}&sort=false&sortBy=name`
+      )
       .then((res) => {
-        const i5Products = res.data.filter((p) =>
+        const i3Products = res.data.filter((p) =>
           p.name.toLowerCase().includes("i3")
         );
-        setProducts(i5Products);
+        setProducts(i3Products);
       })
       .catch((err) => console.error("Lỗi lấy sản phẩm i3:", err));
   }, [page]);
@@ -57,7 +71,8 @@ const ProductI3 = () => {
       quantity: 1,
     };
 
-    axiosInstance.post("/carts/add", cartItem)
+    axiosInstance
+      .post("/carts/add", cartItem)
       .then(() => {
         alert(`${product.name} đã thêm vào giỏ hàng!`);
       })
@@ -71,7 +86,9 @@ const ProductI3 = () => {
 
   return (
     <Container className="py-4">
-      <h2 className="text-center mb-4">Sản phẩm CPU Intel Core i3</h2>
+      <h2 className="text-center mb-4 text-primary fw-bold">
+        Sản phẩm CPU Intel Core i3
+      </h2>
 
       <Row className="mb-3">
         <Col md={3}>
@@ -79,7 +96,7 @@ const ProductI3 = () => {
             value={sortOption}
             onChange={(e) => {
               setSortOption(e.target.value);
-              setPage(1); // reset về trang đầu khi sắp xếp lại
+              setPage(1);
             }}
           >
             <option value="name">Sắp xếp theo tên (A-Z)</option>
@@ -95,18 +112,29 @@ const ProductI3 = () => {
           .map((product) => (
             <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
               <Card
-                className="h-100 shadow-sm"
+                className="h-100 shadow product-card"
                 onClick={() => handleClick(product.id)}
-                style={{ cursor: "pointer" }}
               >
-                <Card.Img
-                  variant="top"
-                  src={product.thumbnail || product.image}
-                  
-                />
+                <div className="image-container">
+                  {!imageLoaded[product.id] && (
+                    <div className="image-placeholder">
+                      <Spinner animation="border" variant="secondary" size="sm" />
+                    </div>
+                  )}
+                  <Card.Img
+                    variant="top"
+                    src={product.thumbnail || product.image || placeholderImage}
+                    onLoad={() =>
+                      setImageLoaded((prev) => ({ ...prev, [product.id]: true }))
+                    }
+                    className={`product-image ${
+                      imageLoaded[product.id] ? "loaded" : "loading"
+                    }`}
+                  />
+                </div>
                 <Card.Body>
-                  <Card.Title>{product.name}</Card.Title>
-                  <Card.Text className="text-danger">
+                  <Card.Title className="fs-6">{product.name}</Card.Title>
+                  <Card.Text className="text-danger fw-bold">
                     {product.price.toLocaleString("vi-VN")}₫
                   </Card.Text>
                   <Button
@@ -115,6 +143,7 @@ const ProductI3 = () => {
                       e.stopPropagation();
                       addToCart(product);
                     }}
+                    className="w-100"
                   >
                     Thêm vào giỏ
                   </Button>
@@ -126,7 +155,10 @@ const ProductI3 = () => {
 
       <div className="d-flex justify-content-center">
         <Pagination>
-          <Pagination.Prev onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} />
+          <Pagination.Prev
+            onClick={() => setPage(Math.max(1, page - 1))}
+            disabled={page === 1}
+          />
           {[...Array(totalPages)].map((_, i) => (
             <Pagination.Item
               key={i + 1}
@@ -136,7 +168,10 @@ const ProductI3 = () => {
               {i + 1}
             </Pagination.Item>
           ))}
-          <Pagination.Next onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} />
+          <Pagination.Next
+            onClick={() => setPage(Math.min(totalPages, page + 1))}
+            disabled={page === totalPages}
+          />
         </Pagination>
       </div>
     </Container>

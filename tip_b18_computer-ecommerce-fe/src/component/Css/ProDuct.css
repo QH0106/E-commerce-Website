@@ -15,22 +15,26 @@
     display: flex;
 }
 
-.banner h2{
-    margin-top: 20px;
-    font-size: 3rem;
-    color: #ffffff;
-    background: url('/public/HD-wallpaper-purple-blue-bubbles-gradient-blue-bubbles-colors-purple.jpg') center;
-    background-size: cover;
-    background-clip: Text;
-    color: transparent;
-    animation: animate 10s linear infinite;
+
+.PagePd > h2 {
+    background: linear-gradient(45deg, #1b07b4, #620e03, #1d0601);
+    color: #fff;
+    text-align: center;
+    padding: 50px 0;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 100px;         
+    animation: animate 2s infinite;
 }
 
 @keyframes animate {
     to {
-        background-position-x: -200px
+        background-position-x: -1520px;
     }
 }
+
 
 .bgtext img {
     width: 200px;
@@ -43,22 +47,18 @@
 }
 
 .load {
+    margin: auto;
     margin-top: 20px;
-    width: 330px;
-    height: 54px;
+    width: 250px;
+    height: 45px;
     background-color: #FE2204;
-    color: #ffffff;
     font-size: 20px;
     align-items: center;
     text-align: center;
-    justify-content: center;
+    text-decoration: none;
+    color: #ffffff;
 }
 
 h5{
     font-size: 1rem;
-}
-
-.load {
-    text-decoration: none;
-    color: #ffffff;
 }

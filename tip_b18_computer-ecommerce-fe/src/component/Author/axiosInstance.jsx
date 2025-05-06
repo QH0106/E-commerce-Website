@@ -2,24 +2,28 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "https://deployapi-xw5c.onrender.com/api",
-  //  baseURL: "http://192.168.199.49:8080/api",
+  // baseURL: "http://192.168.199.43:8080/api",
   timeout: 10000,
 });
 
-//Interceptor cho request – tự động gắn token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
-    config.headers["Content-Type"] = "application/json";
+
+    // Chỉ set Content-Type nếu không phải là FormData
+    if (!(config.data instanceof FormData)) {
+      config.headers["Content-Type"] = "application/json";
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-//Lỗi 401 thì xóa token + currentUser + về Login
+// xử lý lỗi 401
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -33,7 +37,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Gán token theo yêu cầu (nếu cần thủ công)
+// Hàm gán token thủ công nếu cần
 export const setAuthToken = (token) => {
   if (token) {
     axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;

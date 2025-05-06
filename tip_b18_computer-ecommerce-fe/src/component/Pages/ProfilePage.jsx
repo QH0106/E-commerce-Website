@@ -16,21 +16,30 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
-    
     axiosInstance.get("/users/me")
       .then((res) => {
-        const userId = res.data.data.id;
-        axiosInstance.get(`/users/getById/${userId}`)
-          .then((res2) => {
-            setUserData(res2.data.data);
-            setUpdateData(res2.data.data);
-          });
+        const user = res.data.data;
+        if (user.role === "ADMIN") {
+          axiosInstance.get(`/users/getById/${user.id}`)
+            .then((res2) => {
+              setUserData(res2.data.data);
+              setUpdateData(res2.data.data);
+            })
+            .catch((err) => {
+              console.error(err);
+              toast.error("Không lấy được thông tin ADMIN");
+            });
+        } else {
+          setUserData(user);
+          setUpdateData(user);
+        }
       })
       .catch((err) => {
         console.error(err);
         toast.error("Không lấy được thông tin người dùng");
       });
   }, []);
+  
 
   const handleSave = async () => {
     try {
@@ -87,9 +96,6 @@ const ProfilePage = () => {
           <div className={`mb-3 ${key === "address" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("address")}>
             Địa chỉ
           </div>
-          <div className={`mb-3 ${key === "orders" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("orders")}>
-            Quản lý đơn hàng
-          </div>
           <div className={`mb-3 ${key === "password" ? "text-danger" : ""}`} style={{ cursor: "pointer" }} onClick={() => setKey("password")}>
             Đổi mật khẩu
           </div>
@@ -142,10 +148,6 @@ const ProfilePage = () => {
               </Button>
             </Tab>
 
-            <Tab eventKey="orders" title="Đơn hàng">
-              <p>Xem và quản lý đơn hàng của bạn ở đây.</p>
-            </Tab>
-
             <Tab eventKey="password" title="Đổi mật khẩu">
             <Form.Group className="mb-3">
                 <Form.Label>Tên tài khoản</Form.Label>
@@ -178,7 +180,7 @@ const ProfilePage = () => {
           </Tabs>
         </Col>
       </Row>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <ToastContainer position="top-center" autoClose={1000} />
     </Container>
   );
 };

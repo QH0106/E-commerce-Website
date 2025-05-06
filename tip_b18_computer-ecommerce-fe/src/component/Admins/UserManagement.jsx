@@ -84,7 +84,7 @@ const UserManagement = () => {
               <td>{user.address}</td>
               <td>{user.roles}</td>
               <td>
-                <Button variant="warning" onClick={() => handleShowModal(user)} className="me-2">
+                <Button variant="warning" onClick={() => handleShowModal(user)} className="me-2" style={{margin:"auto"}}>
                   <FaEdit /> Sửa
                 </Button>
               </td>

@@ -56,7 +56,6 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// RevenueStatistics (Gộp vào đây)
 const RevenueStatistics = () => {
   const [key, setKey] = useState('top-products');
   const [topProducts, setTopProducts] = useState([]);
@@ -68,9 +67,9 @@ const RevenueStatistics = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/statistics/top-products');
-      setTopProducts(res.data);
+      setTopProducts(res.data.data);
     } catch (error) {
-      console.error('Error fetching top products:', error);
+      console.error('Error top sản phẩm:', error);
     } finally {
       setLoading(false);
     }
@@ -80,7 +79,7 @@ const RevenueStatistics = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/statistics/revenue-by-period?period=WEEK');
-      setRevenueByWeek(res.data);
+      setRevenueByWeek(res.data.data);
     } catch (error) {
       console.error('Error fetching revenue by week:', error);
     } finally {
@@ -92,7 +91,7 @@ const RevenueStatistics = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/statistics/revenue-by-date');
-      setRevenueByDate(res.data);
+      setRevenueByDate(res.data.data);
     } catch (error) {
       console.error('Error fetching revenue by date:', error);
     } finally {
@@ -120,6 +119,7 @@ const RevenueStatistics = () => {
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
+                  <th>Hình ảnh</th>
                   <th>Tên sản phẩm</th>
                   <th>Số lượng bán</th>
                 </tr>
@@ -128,8 +128,12 @@ const RevenueStatistics = () => {
                 {Array.isArray(topProducts) && topProducts.length > 0 ? (
                   topProducts.map((product, index) => (
                     <tr key={index}>
+                      <td>
+                        <img src={product.thumbnail} alt={product.productName} 
+                        style={{ width: "80px", height: "auto" }} />
+                      </td>
                       <td>{product.productName}</td>
-                      <td>{product.totalQuantity}</td>
+                      <td>{product.quantitySold}</td>
                     </tr>
                   ))
                 ) : (
