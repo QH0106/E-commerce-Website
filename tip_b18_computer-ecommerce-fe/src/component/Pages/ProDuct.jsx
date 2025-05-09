@@ -66,16 +66,16 @@ const ProDuct = () => {
   );
 
   return (
-    <div className="PagePd">
-      <div className="bannerH">
-        <div className="slideshow">
-          <Carousel className="slide">
+    <div classNameNameName="PagePd">
+      <div classNameNameName="bannerH">
+        <div classNameNameName="slideshow">
+          <Carousel classNameNameName="slide">
             <Carousel.Item>
               <a href="/ProDuct">
                 <img
                   src="/banner1.jpg"
                   alt="slide 1"
-                  className="d-block"
+                  classNameNameName="d-block"
                   id="item"
                 />
               </a>
@@ -85,7 +85,7 @@ const ProDuct = () => {
                 <img
                   src="/banner2.jpg"
                   alt="slide 2"
-                  className="d-block"
+                  classNameNameName="d-block"
                   id="item"
                 />
               </a>
@@ -95,7 +95,7 @@ const ProDuct = () => {
                 <img
                   src="/banner3.jpg"
                   alt="slide 3"
-                  className="d-block"
+                  classNameNameName="d-block"
                   id="item"
                 />
               </a>
@@ -104,9 +104,9 @@ const ProDuct = () => {
         </div>
       </div>
 
-      <div className="d-flex justify-content-between mt-3">
+      <div classNameNameName="d-flex justify-content-between mt-3">
         <select
-          className="form-select w-25"
+          classNameNameName="form-select w-25"
           onChange={(e) => setSort(e.target.value)}
           style={{marginBottom:"30px"}}
         >
@@ -117,17 +117,17 @@ const ProDuct = () => {
 
       {/* Section I3 */}
       <h2>Intel Core i3</h2>
-      <div className="Pd"style={{justifyItems:"center"}}>
-        <div className="container row mt-3">
+      <div classNameNameName="Pd"style={{justifyItems:"center"}}>
+        <div classNameNameName="container row mt-3">
               {productsI3.slice(0, 8).map((product) => (
-                <div key={product.id} className="col-md-3 mb-3">
+                <div key={product.id} classNameNameName="col-md-3 mb-3">
                   <div
-                    className="card p-3"
+                    classNameNameName="card p-3"
                     onClick={() => navigate(`/Detail/${product.id}`)}
                     style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
                   >
                     <img
-                      className="card-img-top"
+                      classNameNameName="card-img-top"
                       src={product.thumbnail || product.image}
                       alt={product.name}
                     />
@@ -137,7 +137,7 @@ const ProDuct = () => {
                       Giá: {product.price.toLocaleString("vi-VN")}₫
                     </p>
                     <button
-                      className="btn btn-danger"
+                      classNameNameName="btn btn-danger"
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
@@ -148,10 +148,10 @@ const ProDuct = () => {
                   </div>
                 </div>
                 ))}
-            <div className="text-center mt-3">
+            <div classNameNameName="text-center mt-3">
               <button
                 onClick={() => navigate("/ProductI3")}
-                className="load btn btn-primary"
+                classNameNameName="load btn btn-primary"
               >
                 Xem Thêm
               </button>
@@ -161,17 +161,17 @@ const ProDuct = () => {
 
       {/* Section I5 */}
       <h2 style={{marginTop:"10px"}}>Intel Core i5</h2>
-      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
-        <div className="container row mt-3">
+      <div classNameNameName="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div classNameNameName="container row mt-3">
               {productsI5.slice(0, 8).map((product) => (
-                <div key={product.id} className="col-md-3 mb-3">
+                <div key={product.id} classNameNameName="col-md-3 mb-3">
                   <div
-                    className="card p-3"
+                    classNameNameName="card p-3"
                     onClick={() => navigate(`/Detail/${product.id}`)}
                     style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
                   >
                     <img
-                      className="card-img-top"
+                      classNameNameName="card-img-top"
                       src={product.thumbnail || product.image}
                       alt={product.name}
                     />
@@ -181,7 +181,7 @@ const ProDuct = () => {
                       Giá: {product.price.toLocaleString("vi-VN")}₫
                     </p>
                     <button
-                      className="btn btn-danger"
+                      classNameNameName="btn btn-danger"
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
@@ -192,10 +192,10 @@ const ProDuct = () => {
                   </div>
                 </div>
                 ))}
-            <div className="text-center mt-3">
+            <div classNameNameName="text-center mt-3">
               <button
                 onClick={() => navigate("/ProductI3")}
-                className="load btn btn-primary"
+                classNameName="load btn btn-primary"
               >
                 Xem Thêm
               </button>
@@ -205,17 +205,17 @@ const ProDuct = () => {
 
       {/* Section I7 */}
       <h2 style={{marginTop:"10px"}}>Intel Core i7</h2>
-      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
-        <div className="container row mt-3">
+      <div classNameName="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div classNameName="container row mt-3">
               {productsI7.slice(0, 8).map((product) => (
-                <div key={product.id} className="col-md-3 mb-5">
+                <div key={product.id} classNameName="col-md-3 mb-5">
                   <div
-                    className="card p-3"
+                    classNameName="card p-3"
                     onClick={() => navigate(`/Detail/${product.id}`)}
                     style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
                   >
                     <img
-                      className="card-img-top"
+                      classNameName="card-img-top"
                       src={product.thumbnail || product.image}
                       alt={product.name}
                     />
@@ -225,7 +225,7 @@ const ProDuct = () => {
                       Giá: {product.price.toLocaleString("vi-VN")}₫
                     </p>
                     <button
-                      className="btn btn-danger"
+                      classNameName="btn btn-danger"
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
@@ -236,10 +236,10 @@ const ProDuct = () => {
                   </div>
                 </div>
                 ))}
-            <div className="text-center mt-3">
+            <div classNameName="text-center mt-3">
               <button
                 onClick={() => navigate("/ProductI3")}
-                className="load btn btn-primary"
+                classNameName="load btn btn-primary"
               >
                 Xem Thêm
               </button>
@@ -249,17 +249,17 @@ const ProDuct = () => {
       
       {/* Section I9 */}
       <h2 style={{marginTop:"10px"}}>Intel Core i9</h2>
-      <div className="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
-        <div className="container row mt-3">
+      <div classNameName="Pd" style={{marginTop:"10px", justifyItems:"center"}}>
+        <div classNameName="container row mt-3">
               {productsI9.slice(0, 8).map((product) => (
-                <div key={product.id} className="col-md-3 mb-3">
+                <div key={product.id} classNameName="col-md-3 mb-3">
                   <div
-                    className="card p-3"
+                    classNameName="card p-3"
                     onClick={() => navigate(`/Detail/${product.id}`)}
                     style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
                   >
                     <img
-                      className="card-img-top"
+                      classNameName="card-img-top"
                       src={product.thumbnail || product.image}
                       alt={product.name}
                     />
@@ -269,7 +269,7 @@ const ProDuct = () => {
                       Giá: {product.price.toLocaleString("vi-VN")}₫
                     </p>
                     <button
-                      className="btn btn-danger"
+                      classNameName="btn btn-danger"
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
@@ -280,10 +280,10 @@ const ProDuct = () => {
                   </div>
                 </div>
                 ))}
-            <div className="text-center mt-3">
+            <div classNameName="text-center mt-3">
               <button
                 onClick={() => navigate("/ProductI3")}
-                className="load btn btn-primary"
+                classNameName="load btn btn-primary"
               >
                 Xem Thêm
               </button>

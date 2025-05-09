@@ -119,6 +119,12 @@ button {
     text-align: center;
 }
 
+.login:hover {
+    background-color: #b01616;
+    color: #e0d1d1;
+    transition: 0.5s ease;
+}
+
 .icon-social {
     display: flex;
     justify-content: center;
@@ -148,6 +154,9 @@ button {
 
 .icon-social :hover{
     transform: translateY(2px);
+    background-color: #dd0b0b;
+    color: #ffffff;
+    transition: 0.5s ease;
 }
 
 .register {

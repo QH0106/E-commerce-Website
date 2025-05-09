@@ -31,9 +31,6 @@ const OrderManagement = () => {
     fetchOrders(filterStatus, filterPaymentStatus);
   }, [filterStatus, filterPaymentStatus]);
   
-  
-  
-
   const handleOpenModal = (order) => {
     setSelectedOrder({ ...order });
     setShow(true);

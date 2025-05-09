@@ -29,6 +29,13 @@ const Login = () => {
       return;
     }
 
+     // 👉 Thêm kiểm tra định dạng mật khẩu
+    // const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    // if (!passwordRegex.test(password)) {
+    //   setMessage("Mật khẩu phải có ít nhất 8 ký tự, 1 chữ in hoa và 1 ký tự đặc biệt!");
+    //   return;
+    // }
+
     try {
       const response = await axiosInstance.post("/v1/auth/login", {
         username,
@@ -119,7 +126,7 @@ const Login = () => {
             <a href="/Forgotpassword">Quên mật khẩu?</a>
           </div>
 
-          <button type="submit">Đăng nhập</button>
+          <button type="submit" className="login">Đăng nhập</button>
 
           {message && <p className="message">{message}</p>}
 

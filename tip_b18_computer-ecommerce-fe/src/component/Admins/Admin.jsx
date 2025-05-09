@@ -79,25 +79,35 @@ const RevenueStatistics = () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/statistics/revenue-by-period?period=WEEK');
-      setRevenueByWeek(res.data.data);
+      const formattedData = res.data.data.dailyRevenue.map(item => ({
+        period: item.week,
+        revenue: item.totalRevenue
+      }));
+      setRevenueByWeek(formattedData);
     } catch (error) {
       console.error('Error fetching revenue by week:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const fetchRevenueByDate = async () => {
     setLoading(true);
     try {
       const res = await axiosInstance.get('/statistics/revenue-by-date');
-      setRevenueByDate(res.data.data);
+      const formattedData = res.data.data.map(item => ({
+        date: item.date,
+        revenue: item.totalRevenue
+      }));
+      setRevenueByDate(formattedData);
     } catch (error) {
       console.error('Error fetching revenue by date:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (key === 'top-products') fetchTopProducts();
@@ -116,36 +126,23 @@ const RevenueStatistics = () => {
       >
         <Tab eventKey="top-products" title="Top sản phẩm bán chạy">
           {loading ? <Spinner animation="border" /> : (
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Hình ảnh</th>
-                  <th>Tên sản phẩm</th>
-                  <th>Số lượng bán</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(topProducts) && topProducts.length > 0 ? (
-                  topProducts.map((product, index) => (
-                    <tr key={index}>
-                      <td>
-                        <img src={product.thumbnail} alt={product.productName} 
-                        style={{ width: "80px", height: "auto" }} />
-                      </td>
-                      <td>{product.productName}</td>
-                      <td>{product.quantitySold}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="2" className="text-center">Không có dữ liệu</td>
-                  </tr>
-                )}
-              </tbody>
-
-            </Table>
+            topProducts.length > 0 ? (
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={topProducts} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis dataKey="productName" type="category" width={150} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="quantitySold" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center mt-3">Không có dữ liệu</div>
+            )
           )}
         </Tab>
+
 
         <Tab eventKey="revenue-week" title="Doanh thu theo tuần">
           {loading ? <Spinner animation="border" /> : (
@@ -162,6 +159,7 @@ const RevenueStatistics = () => {
           )}
         </Tab>
 
+
         <Tab eventKey="revenue-date" title="Doanh thu theo ngày">
           {loading ? <Spinner animation="border" /> : (
             <ResponsiveContainer width="100%" height={400}>
@@ -176,6 +174,7 @@ const RevenueStatistics = () => {
             </ResponsiveContainer>
           )}
         </Tab>
+
       </Tabs>
     </Container>
   );

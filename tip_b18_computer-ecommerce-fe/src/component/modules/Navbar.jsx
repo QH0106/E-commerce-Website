@@ -3,9 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axiosInstance from "../Author/axiosInstance";
 import "../Css/Navbar.css";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
-  const [cart] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
@@ -21,7 +22,7 @@ const Navbar = () => {
         const response = await axiosInstance.get("/products/getAllProducts");
         setProducts(response.data);
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+        console.error("Error fetching product list:", error);
       }
     };
 
@@ -42,6 +43,12 @@ const Navbar = () => {
         setIsLogin(true);
         setUsername(user.fullname || user.username || "User");
         setIsAdmin(user.roles.includes("ROLE_ADMIN"));
+
+        const decoded = jwtDecode(token);
+        user.id = decoded.jwtId;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("currentUser", JSON.stringify({ data: user }));
       } catch (error) {
         console.error("Lỗi lấy thông tin người dùng:", error);
         setIsLogin(false);
@@ -49,6 +56,41 @@ const Navbar = () => {
     };
 
     fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const currentUserRaw = JSON.parse(localStorage.getItem("currentUser"));
+      const token = localStorage.getItem("token");
+      const currentUser = currentUserRaw && currentUserRaw.data ? currentUserRaw.data : null;
+
+      if (!currentUser || !token || !currentUser.id) {
+        setTotalQuantity(0);
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get(`/carts/getCartByUserId/${currentUser.id}`);
+        const cartData = response.data.data || response.data;
+        const cartItems = cartData.cartDetails || [];
+        const total = cartItems.reduce((total, item) => total + item.quantity, 0);
+        setTotalQuantity(total);
+      } catch (error) {
+        console.error("Lỗi khi lấy giỏ hàng:", error);
+        setTotalQuantity(0);
+      }
+    };
+
+    fetchCart();
+
+    const handleCartUpdate = () => {
+      fetchCart();
+    };
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -172,9 +214,23 @@ const Navbar = () => {
 
         {/* Cart + User */}
         <div className="d-flex align-items-center ms-2 gap-4" style={{ marginRight: "50px" }}>
-          <a href="/Cart">
-            <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white"}}></i>
-            {cart.length > 0 && <span>{cart.length}</span>}
+          <a href="/Cart" style={{ position: "relative", display: "inline-block" }}>
+            <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white" }}></i>
+            {totalQuantity > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                backgroundColor: 'red',
+                color: 'white',
+                borderRadius: '50%',
+                padding: '2px 6px',
+                fontSize: '12px',
+                fontWeight: 'bold'
+              }}>
+                {totalQuantity}
+              </span>
+            )}
           </a>
 
           {isLogin ? (

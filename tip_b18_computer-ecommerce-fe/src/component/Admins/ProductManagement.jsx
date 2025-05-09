@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, Button, Form, Modal, Pagination } from 'react-bootstrap';
+import { Container, Table, Button, Form, Modal, Pagination, Row, Col } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaArrowAltCircleLeft, FaImage } from 'react-icons/fa';
 import { Link } from 'react-router';
 import axiosInstance from '../Author/axiosInstance';
@@ -11,7 +11,7 @@ const ProductManagement = () => {
   const [show, setShow] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState({ name: '', sku: '', description: '', brand: '', price: '', quantity: '', thumbnail:''  });
-  const [categories, setcategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadData, setUploadData] = useState({
     productId: '',
@@ -20,7 +20,7 @@ const ProductManagement = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 10;
+  const productsPerPage = 100;
 const openUploadModal = (productId) => {
   setUploadData({
     productId,
@@ -38,7 +38,7 @@ const openUploadModal = (productId) => {
 
   useEffect(() => {
     axiosInstance.get("/categories/getAllCategories")
-      .then(response => setcategories(response.data.data))
+      .then(response => setCategories(response.data.data))
       .catch(error => console.error('Error fetching products:', error));
   }, []);
 
@@ -77,6 +77,8 @@ const openUploadModal = (productId) => {
 
   // Xóa sản phẩm
   const handleDelete = (id) => {
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+      if (!confirmDelete) return;
     axiosInstance.delete(`/products/delete/${id}`)
       .then(() => {
         setProducts(products.filter(product => product.id !== id));
@@ -209,87 +211,99 @@ const openUploadModal = (productId) => {
       </Pagination>
 
       {/* Modal để Thêm hoặc Sửa sản phẩm */}
-      <Modal show={show} onHide={() => setShow(false)}>
+      <Modal show={show} onHide={() => setShow(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{isEditing ? 'Sửa Sản phẩm' : 'Thêm Sản phẩm'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="productName">
-              <Form.Label>Tên Sản phẩm</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentProduct.name}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="productsku">
-              <Form.Label>sku</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentProduct.sku}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, sku: e.target.value })}
-              />
-            </Form.Group><Form.Group controlId="productdescription">
-              <Form.Label>description</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentProduct.description}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
-              />
-            </Form.Group><Form.Group controlId="productbrand">
-              <Form.Label>Hãng</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentProduct.brand}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, brand: e.target.value })}
-              />
-            </Form.Group>
-            
-            <Form.Group controlId="productPrice">
-              <Form.Label>Giá</Form.Label>
-              <Form.Control
-                type="number"
-                value={currentProduct.price}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, price: e.target.value })}
-              />
-            </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group controlId="productName" className="mb-3">
+                  <Form.Label>Tên Sản phẩm</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={currentProduct.name}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="productquantity">
-              <Form.Label>Số lượng trong kho</Form.Label>
-              <Form.Control
-                type="number"
-                value={currentProduct.quantity}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, quantity: e.target.value })}
-              />
-            </Form.Group>
+                <Form.Group controlId="productsku" className="mb-3">
+                  <Form.Label>sku</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={currentProduct.sku}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, sku: e.target.value })}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="productThumbnail">
-              <Form.Label>Link ảnh</Form.Label>
-              <Form.Control
-                type="text"
-                value={currentProduct.thumbnail}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, thumbnail: e.target.value })}
-                placeholder="Nhập URL hình ảnh chính"o
-              />
-            </Form.Group>
+                <Form.Group controlId="productdescription" className="mb-3">
+                  <Form.Label>description</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={currentProduct.description}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
+                  />
+                </Form.Group>
 
-            <Form.Group controlId="productCategoryId">
-              <Form.Label>Danh mục sản phẩm</Form.Label>
-              <Form.Select
-                value={currentProduct.categoryId}
-                onChange={(e) => setCurrentProduct({ ...currentProduct, categoryId: e.target.value })}
-              >
-                <option value="">-- Chọn danh mục --</option>
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+                <Form.Group controlId="productbrand" className="mb-3">
+                  <Form.Label>Hãng</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={currentProduct.brand}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, brand: e.target.value })}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="productThumbnail" className="mb-3">
+                  <Form.Label>Link ảnh</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={currentProduct.thumbnail}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, thumbnail: e.target.value })}
+                    placeholder="Nhập URL hình ảnh chính"
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={6}>
+                <Form.Group controlId="productPrice" className="mb-3">
+                  <Form.Label>Giá</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={currentProduct.price}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, price: e.target.value })}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="productquantity" className="mb-3">
+                  <Form.Label>Số lượng trong kho</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={currentProduct.quantity}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, quantity: e.target.value })}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="productCategoryId" className="mb-3">
+                  <Form.Label>Danh mục sản phẩm</Form.Label>
+                  <Form.Select
+                    value={currentProduct.categoryId}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, categoryId: e.target.value })}
+                  >
+                    <option value="">-- Chọn danh mục --</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
           </Form>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>Hủy</Button>
           <Button variant="primary" onClick={isEditing ? handleEdit : handleAdd}>
@@ -327,7 +341,7 @@ const openUploadModal = (productId) => {
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{justifyContent:"center"}}>
         <Button variant="secondary" onClick={() => setShowUploadModal(false)}>Hủy</Button>
         <Button variant="primary" onClick={handleUploadImages}>Tải lên</Button>
       </Modal.Footer>

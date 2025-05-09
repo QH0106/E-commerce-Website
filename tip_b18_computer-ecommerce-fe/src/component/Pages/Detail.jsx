@@ -198,13 +198,13 @@ const ProductDetail = () => {
             <Tab eventKey="description" title="Mô tả">
               <p>{product.description}</p>
             </Tab>
-            <Tab eventKey="specs" title="Thông số kỹ thuật">
+            {/* <Tab eventKey="specs" title="Thông số kỹ thuật">
               <ListGroup variant="flush">
                 {product.specs?.map((spec, index) => (
                   <ListGroup.Item key={index}>{spec}</ListGroup.Item>
                 ))}
               </ListGroup>
-            </Tab>
+            </Tab> */}
             <Tab eventKey="reviews" title={`Đánh giá (${product.reviews?.length || 0})`}>
               <div>
                 {product.reviews?.map((review, index) => (

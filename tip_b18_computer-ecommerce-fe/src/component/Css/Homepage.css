@@ -4,6 +4,14 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+:root {
+    --primary-color: #e50000;
+    --secondary-color: #b30000;
+    --accent-color: #ff3333;
+    --light-color: #ffffff;
+    --dark-color: #990000;
+}
+
 .PageHm {
     position: relative;
     display: block;
@@ -21,6 +29,22 @@
     background-color: #E31B1B;
     z-index: 10;
     box-sizing: border-box;
+}
+
+.signature {
+    color: #020101;
+    font-size: 50px;
+    text-shadow:
+      0 0 5px #ff003c,
+      0 0 10px #ff003c,
+      0 0 20px #ff003c,
+      0 0 40px #ff003c,
+      0 0 80px #ff003c;
+  }
+  
+.swiper-slide{
+    margin-right: -20px; 
+    margin-left: 20px;
 }
 
 .brand {
@@ -73,6 +97,25 @@ h5{
     font-size: 1rem;
 }
 
+#card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+#card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(137, 41, 41, 0.2);
+} 
+
+.card-img-top {
+    width: 75%;
+}
+
 .btncard {
     width: 90%;
     height: 54px;
@@ -96,14 +139,10 @@ h5{
     display: block;
 }
 
-footer{
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    align-items: center;
-    background: #F4F1F1;
-}
-
-footer ul{
-    text-align: left;
+.swiper-button-prev,
+.swiper-button-next {
+    font-size: 20px; /* Thu nhỏ icon nếu là font icon */
+    width: 25px;
+    height: 25px;
+    transform: scale(0.7);
 }

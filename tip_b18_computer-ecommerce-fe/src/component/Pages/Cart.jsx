@@ -66,6 +66,8 @@ const CartPage = () => {
   };
 
   const handleRemoveItem = (cartItemId) => {
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+      if (!confirmDelete) return;
     axiosInstance
       .delete(`/carts/items/${cartItemId}`)
       .then(() => {

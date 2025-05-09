@@ -11,11 +11,11 @@ const ProductI7 = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
-  const pageSize = 100;
+  const pageSize = 10;
 
   useEffect(() => {
     axiosInstance
-      .get(`/products/getAllProducts?page=${page}&size=${pageSize}&sort=false&sortBy=name`)
+      .get(`/products/getAllProducts?page=${page}&size=100&sort=false&sortBy=name`)
       .then((res) => {
         const i5Products = res.data.filter((p) =>
           p.name.toLowerCase().includes("i7")

@@ -118,6 +118,7 @@ const ProfilePage = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
+                    type="email"
                     value={updateData.email || ""}
                     onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })}
                   />
@@ -125,6 +126,7 @@ const ProfilePage = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Số điện thoại</Form.Label>
                   <Form.Control
+                    type="number"
                     value={updateData.phone || ""}
                     onChange={(e) => setUpdateData({ ...updateData, phone: e.target.value })}
                   />

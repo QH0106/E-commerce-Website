@@ -15,7 +15,7 @@ const ProductI5Page = () => {
 
   useEffect(() => {
     axiosInstance
-      .get(`/products/getAllProducts?page=${page}&size=${pageSize}`)
+      .get(`/products/getAllProducts?page=${page}&size=100`)
       .then((res) => {
         const i5Products = res.data.filter((p) =>
           p.name.toLowerCase().includes("i5")

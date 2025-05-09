@@ -148,7 +148,7 @@ const UserManagement = () => {
             <Form.Group controlId="userPhone">
               <Form.Label>Số điện thoại</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 value={currentUser.phone || ""}
                 onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })}
               />

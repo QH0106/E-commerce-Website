@@ -47,12 +47,16 @@ const CategoriesManagement = () => {
   };
 
   const handleDelete = (id) => {
-    axiosInstance.delete(`/categories/deleteCategory/${id}`)
-      .then(() => {
-        setCategories(categories.filter(category => category.id !== id));
-      })
-      .catch(error => console.error('Error deleting category:', error));
-  };
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa danh mục này không?");
+      if (!confirmDelete) return;
+
+      axiosInstance.delete(`/categories/deleteCategory/${id}`)
+        .then(() => {
+          setCategories(categories.filter(category => category.id !== id));
+        })
+        .catch(error => console.error('Error deleting category:', error));
+    };
+
 
   const handleShowModal = (category = { id: '', name: '' }) => {
     setCurrentCategory(category);
