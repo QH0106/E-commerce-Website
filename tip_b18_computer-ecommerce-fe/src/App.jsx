@@ -24,21 +24,21 @@ function App() {
   return (
     <div className="home">
       <Routes>
-          <Route index element={<HomePage />} />  
         <Route path="/" element={<MainLayout />}>
-          <Route path="/HomePage" element={<HomePage />} />
-          <Route path="/ProDuct" element={<ProDuct cart={cart} setCart={setCart} />} />
-          <Route path="/Cart" element={<Cart cart={cart} />} /> 
-          <Route path="/Detail/:id" element={<Detail cart={cart} setCart={setCart} />} />
-          <Route path="/ProfilePage" element={<ProfilePage />} />
-          <Route path="/ConfirmOrderPage" element={<ConfirmOrderPage />} />
-          <Route path="/ProductI3" element={<ProductI3 />} />
-          <Route path="/ProductI5" element={<ProductI5 />} />
-          <Route path="/ProductI7" element={<ProductI7 />} />
-          <Route path="/PurchaseHistoryPage" element={<PurchaseHistoryPage />} />
-          
+          <Route index element={<HomePage />} />  
+          <Route path="HomePage" element={<HomePage />} />
+          <Route path="ProDuct" element={<ProDuct cart={cart} setCart={setCart} />} />
+          <Route path="Cart" element={<Cart cart={cart} />} />
+          <Route path="Detail/:id" element={<Detail cart={cart} setCart={setCart} />} />
+          <Route path="ProfilePage" element={<ProfilePage />} />
+          <Route path="ConfirmOrderPage" element={<ConfirmOrderPage />} />
+          <Route path="ProductI3" element={<ProductI3 />} />
+          <Route path="ProductI5" element={<ProductI5 />} />
+          <Route path="ProductI7" element={<ProductI7 />} />
+          <Route path="PurchaseHistoryPage" element={<PurchaseHistoryPage />} />
         </Route>
-        
+
+        {/* Các route không dùng layout */}
         <Route path="/login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Forgotpassword" element={<Forgotpassword />} />
@@ -47,7 +47,6 @@ function App() {
         <Route path="/UserManagement" element={<UserManagement />} />
         <Route path="/CategoriesManagement" element={<CategoriesManagement />} />
         <Route path="/OrderManagement" element={<OrderManagement />} />
-        
       </Routes>
     </div>
   );
