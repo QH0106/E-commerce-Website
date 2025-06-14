@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Css/Homepage.css";
+import SplashCursor from '../Animations/SplashCursor/SplashCursor';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -58,7 +59,6 @@ const HomePage = () => {
       .then(() => {
         toast.success(`${product.name} đã thêm vào giỏ hàng!`);
         window.dispatchEvent(new Event('cartUpdated'));
-        console.log('cartUpdated event dispatched');
       })
       .catch((error) => {
         console.error("Lỗi khi thêm vào giỏ hàng:", error);
@@ -68,6 +68,7 @@ const HomePage = () => {
 
   return (
     <div className="PageHm">
+      <SplashCursor />
       <div className="bannerH">
         <div className="slideshow">
           <Carousel className="slide">

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { createContext, useState, useContext, useEffect } from 'react';
 import axiosInstance from '../Author/axiosInstance';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +13,7 @@ const Sidebar = () => (
   <div className="d-flex flex-column p-3 bg-dark text-white vh-100" style={{ width: '250px' }}>
     <span><h4 className="mb-4">Admin</h4></span>
     <ul className="nav flex-column">
+      <li className="nav-item"><Link className="nav-link text-white" to="/Admin">Doanh thu</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/ProductManagement">Sản phẩm</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/UserManagement">Người dùng</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/CategoriesManagement">Danh mục</Link></li>

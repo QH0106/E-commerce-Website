@@ -9,7 +9,6 @@ const Login = () => {
     password: "",
     showPassword: false,
   });
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,7 +24,7 @@ const Login = () => {
     const { username, password } = formData;
 
     if (!username || !password) {
-      setMessage("username và mật khẩu không được để trống!");
+      alert("username và mật khẩu không được để trống!");
       return;
     }
 
@@ -128,7 +127,6 @@ const Login = () => {
 
           <button type="submit" className="login">Đăng nhập</button>
 
-          {message && <p className="message">{message}</p>}
 
           <p className="text">Hoặc tiếp tục với</p>
 

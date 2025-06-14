@@ -85,12 +85,12 @@ const ProductI3 = () => {
   const handleClick = (id) => navigate(`/Detail/${id}`);
 
   return (
-    <Container classNameNameNameNameNameName="py-4">
-      <h2 classNameNameNameNameNameName="text-center mb-4 text-primary fw-bold">
+    <Container className="py-4">
+      <h2 className="text-center mb-4 text-primary fw-bold">
         Sản phẩm CPU Intel Core i3
       </h2>
 
-      <Row classNameNameNameNameNameName="mb-3">
+      <Row className="mb-3">
         <Col md={3}>
           <Form.Select
             value={sortOption}
@@ -110,14 +110,14 @@ const ProductI3 = () => {
         {sortedProducts
           .slice((page - 1) * pageSize, page * pageSize)
           .map((product) => (
-            <Col md={3} sm={6} xs={12} key={product.id} classNameNameNameNameNameName="mb-4">
+            <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
               <Card
-                classNameNameNameNameNameName="h-100 shadow product-card"
+                className="h-100 shadow product-card"
                 onClick={() => handleClick(product.id)}
               >
-                <div classNameNameNameNameNameName="image-container">
+                <div className="image-container">
                   {!imageLoaded[product.id] && (
-                    <div classNameNameNameNameNameName="image-placeholder">
+                    <div className="image-placeholder">
                       <Spinner animation="border" variant="secondary" size="sm" />
                     </div>
                   )}
@@ -127,14 +127,14 @@ const ProductI3 = () => {
                     onLoad={() =>
                       setImageLoaded((prev) => ({ ...prev, [product.id]: true }))
                     }
-                    classNameNameNameNameNameName={`product-image ${
+                    className={`product-image ${
                       imageLoaded[product.id] ? "loaded" : "loading"
                     }`}
                   />
                 </div>
                 <Card.Body>
-                  <Card.Title classNameNameNameNameNameName="fs-6">{product.name}</Card.Title>
-                  <Card.Text classNameNameNameNameNameName="text-danger fw-bold">
+                  <Card.Title className="fs-6">{product.name}</Card.Title>
+                  <Card.Text className="text-danger fw-bold">
                     {product.price.toLocaleString("vi-VN")}₫
                   </Card.Text>
                   <Button
@@ -143,7 +143,7 @@ const ProductI3 = () => {
                       e.stopPropagation();
                       addToCart(product);
                     }}
-                    classNameNameNameNameNameName="w-100"
+                    className="w-100"
                     style={{margin:"auto"}}
                   >
                     Thêm vào giỏ
@@ -154,7 +154,7 @@ const ProductI3 = () => {
           ))}
       </Row>
 
-      <div classNameNameNameNameNameNameName="d-flex justify-content-center">
+      <div className="d-flex justify-content-center">
         <Pagination>
           <Pagination.Prev
             onClick={() => setPage(Math.max(1, page - 1))}

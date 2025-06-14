@@ -26,4 +26,9 @@
     height: 75%;
   }
 
+#sidebars:hover {
+  background-color: aqua;
+  color: #000;
+}
+
   

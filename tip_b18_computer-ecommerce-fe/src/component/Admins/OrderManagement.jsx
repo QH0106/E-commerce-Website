@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Table, Button, Form, Modal, Pagination } from 'react-bootstrap';
 import axiosInstance from '../Author/axiosInstance';
 import { FaEdit, FaArrowAltCircleLeft } from 'react-icons/fa';

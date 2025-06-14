@@ -21,7 +21,8 @@ const CartPage = () => {
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const userId = currentUser?.data.id;
-
+      console.log(userId);
+      
     if (!userId) return setLoading(false);
     
     axiosInstance
@@ -89,17 +90,19 @@ const CartPage = () => {
 
     const handleBuy = () => {
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const userId = currentUser?.data.id;
+
       if (!currentUser?.data.id) {
         toast.warning("Bạn cần đăng nhập để thanh toán.");
         return;
       }
-    
+
       const selectedItems = cart.filter((item) => item.selected);
       if (selectedItems.length === 0) {
         toast.info("Vui lòng chọn ít nhất 1 sản phẩm.");
         return;
       }
-    
+
       if (!customer.phone || !customer.address) {
         alert("Vui lòng nhập đầy đủ thông tin khách hàng (Số điện thoại, Địa chỉ).");
         return;
@@ -110,18 +113,18 @@ const CartPage = () => {
         shippingAddress: customer.address,
         note: customer.note || "",
       };
-    
+
       axiosInstance
         .post("/orders/create", orderData)
         .then((response) => {
           const createdOrderId = response.data.orderId;
           setOrderId(createdOrderId);
-    
+
           if (paymentMethod === "COD") {
-            toast.success("Đặt hàng thành công!");
+            alert("Đặt hàng thành công!");
             setTimeout(() => {
               axiosInstance
-                .get(`/carts/getCartByUserId/${currentUser.id}`)
+                .get(`/carts/getCartByUserId/${userId}`)
                 .then((res) => {
                   const updatedCart = res.data?.cartDetails || [];
                   const formattedCart = updatedCart.map((item) => ({
@@ -139,9 +142,9 @@ const CartPage = () => {
                 .catch((err) => {
                   console.error("Lỗi khi cập nhật giỏ hàng:", err);
                 });
-    
+
                 navigate("/ConfirmOrderPage", { state: { customer, total } });
-                
+
             }, 1000);
           } else {
             setTimeout(() => {
@@ -154,7 +157,7 @@ const CartPage = () => {
           toast.error("Đặt hàng thất bại.");
         });
     };
-    
+
 
   const handlePayment = () => {
     if (!orderId) return;
@@ -203,11 +206,11 @@ const CartPage = () => {
             console.error("Lỗi kiểm tra trạng thái thanh toán:", err);
           });
       }, 5000);
-  
+
       return () => clearInterval(interval);
     }
   }, [orderId, paymentMethod, paymentStatus]);
-  
+
 
   useEffect(() => {
     if (showQR && qrRef.current) {
@@ -311,6 +314,7 @@ const CartPage = () => {
             
           />
           <Form.Control
+            type="number"
             placeholder="Số Điện Thoại" 
             className="mb-2"  
             onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />

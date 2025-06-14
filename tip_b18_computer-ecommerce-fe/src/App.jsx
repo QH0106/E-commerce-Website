@@ -24,8 +24,8 @@ function App() {
   return (
     <div className="home">
       <Routes>
-        <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />  
+        <Route path="/" element={<MainLayout />}>
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/ProDuct" element={<ProDuct cart={cart} setCart={setCart} />} />
           <Route path="/Cart" element={<Cart cart={cart} />} /> 
