@@ -76,10 +76,6 @@ const Login = () => {
     }
   };
 
-  const loginWithGoogle = () => {
-    window.location.href = "/v1/auth/oauth2/authorize/google";
-  };
-
   return (
     <>
       <div className="backgroundLogin"></div>
@@ -131,7 +127,7 @@ const Login = () => {
           <p className="text">Hoặc tiếp tục với</p>
 
           <div className="icon-social">
-            <div className="link-social" onClick={loginWithGoogle}>
+            <div className="link-social">
               <i className="fa-brands fa-google" style={{ cursor: "pointer" }}></i>
             </div>
           </div>

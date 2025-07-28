@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Form, Button, Image, InputGroup } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Author/axiosInstance";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -90,7 +90,7 @@ const CartPage = () => {
 
     const handleBuy = () => {
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const userId = currentUser?.data.id;
+      const userId = currentUser?.data.id;
 
       if (!currentUser?.data.id) {
         toast.warning("Bạn cần đăng nhập để thanh toán.");
