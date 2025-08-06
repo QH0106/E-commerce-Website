@@ -19,7 +19,7 @@ const Sidebar = () => (
       <li className="nav-item"><Link className="nav-link text-white" to="/CategoriesManagement">Danh mục</Link></li>
       <li className="nav-item"><Link className="nav-link text-white" to="/OrderManagement">Order</Link></li>
       <li className="nav-item mt-auto"><LogoutButton /></li>
-      <li className="nav-item mt-auto" style={{margin:"auto"}}><Button variant="warning" href='/'>Trang chủ</Button></li>
+      <li className="nav-item mt-auto" style={{margin:"auto"}}><Button variant="warning" href='/Homepage'>Trang chủ</Button></li>
     </ul>
   </div>
 );

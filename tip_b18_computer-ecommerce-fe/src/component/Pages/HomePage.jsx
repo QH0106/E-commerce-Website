@@ -43,12 +43,20 @@ const HomePage = () => {
   }, []);
 
   const addToCart = (product) => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser) {
-      alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    let currentUser;
+    try {
+      currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
       return;
     }
-
+    
+    if (!currentUser) {
+      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+    
     const cartItem = {
       userId: currentUser.id,
       productId: product.id,
@@ -68,7 +76,7 @@ const HomePage = () => {
 
   return (
     <div className="PageHm">
-      <SplashCursor />
+      
       <div className="bannerH">
         <div className="slideshow">
           <Carousel className="slide">
@@ -171,7 +179,7 @@ const HomePage = () => {
         ) : (
           <Swiper
             modules={[Navigation]}
-            spaceBetween={20}
+            spaceBetween={10}
             slidesPerView={4}
             navigation
           >

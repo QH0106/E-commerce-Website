@@ -76,15 +76,20 @@ const openUploadModal = (productId) => {
   };
 
   // Xóa sản phẩm
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
-      if (!confirmDelete) return;
-    axiosInstance.delete(`/products/delete/${id}`)
-      .then(() => {
-        setProducts(products.filter(product => product.id !== id));
-      })
-      .catch(error => console.error('Error deleting product:', error));
-  };
+  const handleDelete = async (id) => {
+  const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+  if (!confirmDelete) return;
+
+  try {
+    await axiosInstance.delete(`/products/delete/${id}`);
+    setProducts(prev => prev.filter(product => product.id !== id));
+    toast.success("Xóa sản phẩm thành công!");
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    toast.error("Xóa sản phẩm thất bại!");
+  }
+};
+
 
   // Mở modal để thêm mới hoặc chỉnh sửa sản phẩm
   const handleShowModal = (product = {
