@@ -57,9 +57,6 @@ const Sidebar = () => (
           Trang chủ
         </Button>
       </li>
-      <li className="nav-item mt-auto">
-        <LogoutButton />
-      </li>
     </ul>
   </div>
 );

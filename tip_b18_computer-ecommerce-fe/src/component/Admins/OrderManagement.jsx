@@ -62,6 +62,8 @@ const OrderManagement = () => {
         alert("Cập nhật trạng thái thành công!");
         setShow(false);
         fetchOrders(filterStatus);
+        setFilterPaymentStatus("");
+        fetchOrders();
       })
       .catch(() => alert("Lỗi cập nhật trạng thái."));
   };
@@ -79,32 +81,23 @@ const OrderManagement = () => {
     indexOfLastOrder
   );
 
-  const handleDetail = (orderId) => {
-    setShowDetail(true);
-    setOrderDetails(null);
-
-    axiosInstance
-      .get(`/orders/admin/${orderId}`)
-      .then((res) => {
-        if (res.data && res.data.data && res.data.data.items) {
-          const items = res.data.data.items.map((item) => ({
-            productId: item.productId,
-            productName: item.productName,
-            thumbnail: item.thumbnail,
-            quantity: item.quantity,
-            price: item.unitPrice,
-            totalPrice: item.totalPrice,
-          }));
-          setOrderDetails(items);
-        } else {
-          throw new Error("Invalid response format");
-        }
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
-        alert("Không thể lấy chi tiết đơn hàng");
-        setShowDetail(false);
-      });
+  const handleDetail = async (orderId) => {
+    try {
+      const res = await axiosInstance.get(`/orders/admin/${orderId}`);
+      const orderData = res.data.data.items ?? [];
+      const mapItems = orderData.map((item) => ({
+        productId: item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.unitPrice,
+        thumbnail: item.thumbnail,
+      }));
+      setOrderDetails(mapItems);
+      setShowDetail(true);
+    } catch (err) {
+      console.error("lỗi lấy chi tiết đơn hàng", err);
+      alert("lỗi lấy chi tiết đơn hàng");
+    }
   };
 
   return (

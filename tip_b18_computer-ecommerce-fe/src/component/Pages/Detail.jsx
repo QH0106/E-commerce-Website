@@ -103,7 +103,6 @@ const ProductDetail = () => {
     axiosInstance
       .post("/carts/add", cartItem)
       .then((response) => {
-        // Kiểm tra response.data tồn tại trước
         if (response.data) {
           toast.success(`${product.name} đã thêm ${quantity} sản phẩm`);
           window.dispatchEvent(new Event("cartUpdated"));

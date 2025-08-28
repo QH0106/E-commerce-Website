@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Css/Homepage.css";
-import SplashCursor from "../Animations/SplashCursor/SplashCursor";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);

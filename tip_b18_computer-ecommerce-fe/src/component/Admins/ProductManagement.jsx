@@ -227,7 +227,7 @@ const ProductManagement = () => {
         </thead>
         <tbody style={{ textAlign: "center" }}>
           {currentProducts.map((product) => (
-            <tr key={product.id} style={{ verticalAlign: "middle" }}>
+            <tr key={product.id}>
               <td>
                 <img
                   src={product.thumbnail}
