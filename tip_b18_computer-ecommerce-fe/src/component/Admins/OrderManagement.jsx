@@ -30,6 +30,7 @@ const OrderManagement = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [orderInfo, setOrderInfo] = useState(null);
   const ordersPerPage = 10;
 
   const fetchOrders = (orderStatus = "", paymentStatus = "") => {
@@ -84,8 +85,22 @@ const OrderManagement = () => {
   const handleDetail = async (orderId) => {
     try {
       const res = await axiosInstance.get(`/orders/admin/${orderId}`);
-      const orderData = res.data.data.items ?? [];
-      const mapItems = orderData.map((item) => ({
+      const data = res.data.data;
+
+      // Lưu toàn bộ thông tin order
+      setOrderInfo({
+        orderId: data.orderId,
+        userEmail: data.userEmail,
+        createdAt: data.createdAt,
+        orderStatus: data.orderStatus,
+        paymentStatus: data.paymentStatus,
+        shippingAddress: data.shippingAddress,
+        note: data.note,
+        totalAmount: data.totalAmount,
+      });
+
+      // Lưu chi tiết sản phẩm
+      const mapItems = (data.items ?? []).map((item) => ({
         productId: item.productId,
         productName: item.productName,
         quantity: item.quantity,
@@ -93,6 +108,7 @@ const OrderManagement = () => {
         thumbnail: item.thumbnail,
       }));
       setOrderDetails(mapItems);
+
       setShowDetail(true);
     } catch (err) {
       console.error("lỗi lấy chi tiết đơn hàng", err);
@@ -147,7 +163,7 @@ const OrderManagement = () => {
         <thead style={{ textAlign: "center" }}>
           <tr>
             <th>Người đặt</th>
-            <th>Địa chỉ</th>
+            <th>Thông tin</th>
             <th>Mã Order</th>
             <th>Ngày tạo</th>
             <th>Trạng thái</th>
@@ -280,6 +296,15 @@ const OrderManagement = () => {
           <Modal.Title>Chi tiết đơn hàng</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {orderInfo && (
+            <div className="mb-3">
+              <p>
+                <strong>Thông tin người đặt:</strong> {orderInfo.note},{" "}
+                {orderInfo.shippingAddress}
+              </p>
+            </div>
+          )}
+
           {orderDetails === null ? (
             <div className="text-center py-3">
               <div className="spinner-border text-primary" role="status">
@@ -332,14 +357,7 @@ const OrderManagement = () => {
                       Tổng cộng:
                     </td>
                     <td className="text-end fw-bold">
-                      {orderDetails
-                        .reduce(
-                          (sum, item) =>
-                            sum + Number(item.price) * item.quantity,
-                          0
-                        )
-                        .toLocaleString()}{" "}
-                      đ
+                      {orderInfo.totalAmount.toLocaleString()} đ
                     </td>
                   </tr>
                 </tbody>
@@ -351,6 +369,7 @@ const OrderManagement = () => {
             </div>
           )}
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDetail(false)}>
             Đóng

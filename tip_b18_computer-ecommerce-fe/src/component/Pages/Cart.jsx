@@ -121,7 +121,7 @@ const CartPage = () => {
     const orderData = {
       cartItemIds: selectedItems.map((item) => item.cartItemId),
       shippingAddress: customer.address,
-      note: customer.address || "",
+      note: `${customer.fullname}, ${customer.phone}`,
     };
 
     axiosInstance
@@ -131,7 +131,7 @@ const CartPage = () => {
         setOrderId(createdOrderId);
 
         if (paymentMethod === "COD") {
-          alert("Đặt hàng thành công!");
+          toast.success("Đặt hàng thành công!");
           setTimeout(() => {
             axiosInstance
               .get(`/carts/getCartByUserId/${userId}`)
