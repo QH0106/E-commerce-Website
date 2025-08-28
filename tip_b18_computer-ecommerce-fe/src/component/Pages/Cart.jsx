@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Author/axiosInstance";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CartPage = () => {
@@ -79,6 +79,8 @@ const CartPage = () => {
       .delete(`/carts/items/${cartItemId}`)
       .then(() => {
         setCart(cart.filter((item) => item.cartItemId !== cartItemId));
+        window.dispatchEvent(new Event("cartUpdated"));
+        toast.success("Đã xóa sản phẩm khỏi giỏ hàng!");
       })
       .catch((error) => {
         console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
@@ -431,6 +433,11 @@ const CartPage = () => {
             variant={paymentMethod === "COD" ? "danger" : "success"}
             className="w-100"
             onClick={handleAction}
+            disabled={
+              paymentMethod === "QRCODE" &&
+              orderId &&
+              paymentStatus === "UNPAID"
+            }
           >
             {!orderId
               ? "Xác nhận đặt hàng"
@@ -440,6 +447,11 @@ const CartPage = () => {
           </Button>
         </Col>
       </Row>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        closeButton={false}
+      />
     </Container>
   );
 };

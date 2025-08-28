@@ -1,35 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Table, Button, Form, Modal, Pagination } from 'react-bootstrap';
-import { FaEdit, FaArrowAltCircleLeft } from 'react-icons/fa';
-import { Link } from 'react-router';
-import axiosInstance from '../Author/axiosInstance';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Table,
+  Button,
+  Form,
+  Modal,
+  Pagination,
+} from "react-bootstrap";
+import { FaEdit, FaArrowAltCircleLeft } from "react-icons/fa";
+import { Link } from "react-router";
+import axiosInstance from "../Author/axiosInstance";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ id: '', fullname: '', email: '', phone: '', address: '', roles: '' });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [currentUser, setCurrentUser] = useState({
+    id: "",
+    fullname: "",
+    email: "",
+    phone: "",
+    address: "",
+    roles: "",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
   useEffect(() => {
-    axiosInstance.get('/users/getAllUsers')
-      .then(response => setUsers(response.data.data || []))
-      .catch(error => console.error('Error fetching users:', error));
+    axiosInstance
+      .get("/users/getAllUsers")
+      .then((response) => setUsers(response.data.data || []))
+      .catch((error) => console.error("Error fetching users:", error));
   }, []);
 
   const handleEdit = () => {
-    axiosInstance.put(`/users/update/${currentUser.id}`, currentUser)
+    axiosInstance
+      .put(`/users/update/${currentUser.id}`, currentUser)
       .then(() => {
-        alert('Cập nhật người dùng thành công');
-        return axiosInstance.get('/users/getAllUsers');
+        alert("Cập nhật người dùng thành công");
+        return axiosInstance.get("/users/getAllUsers");
       })
-      .then(response => {
+      .then((response) => {
         setUsers(response.data.data || []);
         setShow(false);
-        setCurrentUser({ id: '', fullName: '', email: '', phone: '', address: '', roles: '' });
+        setCurrentUser({
+          id: "",
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          roles: "",
+        });
       })
-      .catch(error => console.error('Error updating user:', error));
+      .catch((error) => console.error("Error updating user:", error));
   };
 
   const handleShowModal = (user) => {
@@ -37,7 +60,7 @@ const UserManagement = () => {
     setShow(true);
   };
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -49,7 +72,12 @@ const UserManagement = () => {
 
   return (
     <Container>
-      <Link to="/Admin"><h2 style={{paddingTop:"20px"}}><FaArrowAltCircleLeft />Admin</h2></Link> 
+      <Link to="/Admin">
+        <h2 style={{ paddingTop: "20px" }}>
+          <FaArrowAltCircleLeft />
+          Admin
+        </h2>
+      </Link>
       <h2>Quản lý Người dùng</h2>
 
       <Form className="mt-3 mb-3">
@@ -76,15 +104,20 @@ const UserManagement = () => {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {currentUsers.map(user => (
-            <tr key={user.id}>
+          {currentUsers.map((user) => (
+            <tr key={user.id} style={{ verticalAlign: "middle" }}>
               <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>
               <td>{user.address}</td>
               <td>{user.roles}</td>
               <td>
-                <Button variant="warning" onClick={() => handleShowModal(user)} className="me-2" style={{margin:"auto"}}>
+                <Button
+                  variant="warning"
+                  onClick={() => handleShowModal(user)}
+                  className="me-2"
+                  style={{ margin: "auto" }}
+                >
                   <FaEdit /> Sửa
                 </Button>
               </td>
@@ -95,27 +128,37 @@ const UserManagement = () => {
 
       <Pagination className="justify-content-center">
         <Pagination.First onClick={() => setCurrentPage(1)} />
-        <Pagination.Prev onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} />
-        {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map(number => {
-          const pageNumber = number + 1;
-          if (Math.abs(currentPage - pageNumber) <= 2) {
-            return (
-              <Pagination.Item
-                key={pageNumber}
-                active={pageNumber === currentPage}
-                onClick={() => paginate(pageNumber)}
-              >
-                {pageNumber}
-              </Pagination.Item>
-            );
+        <Pagination.Prev
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        />
+        {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map(
+          (number) => {
+            const pageNumber = number + 1;
+            if (Math.abs(currentPage - pageNumber) <= 2) {
+              return (
+                <Pagination.Item
+                  key={pageNumber}
+                  active={pageNumber === currentPage}
+                  onClick={() => paginate(pageNumber)}
+                >
+                  {pageNumber}
+                </Pagination.Item>
+              );
+            }
+            return null;
           }
-          return null;
-        })}
+        )}
         <Pagination.Next
-          onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredUsers.length / usersPerPage)))}
+          onClick={() =>
+            setCurrentPage((prev) =>
+              Math.min(prev + 1, Math.ceil(filteredUsers.length / usersPerPage))
+            )
+          }
         />
         <Pagination.Last
-          onClick={() => setCurrentPage(Math.ceil(filteredUsers.length / usersPerPage))}
+          onClick={() =>
+            setCurrentPage(Math.ceil(filteredUsers.length / usersPerPage))
+          }
         />
       </Pagination>
 
@@ -126,22 +169,25 @@ const UserManagement = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-
             <Form.Group controlId="userfullname">
               <Form.Label>Họ và Tên</Form.Label>
               <Form.Control
                 type="text"
                 value={currentUser.fullname || ""}
-                onChange={(e) => setCurrentUser({ ...currentUser, fullname: e.target.value })}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, fullname: e.target.value })
+                }
               />
             </Form.Group>
-            
+
             <Form.Group controlId="userEmail">
               <Form.Label>email</Form.Label>
               <Form.Control
                 type="Email"
                 value={currentUser.email || ""}
-                onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, email: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -150,7 +196,9 @@ const UserManagement = () => {
               <Form.Control
                 type="number"
                 value={currentUser.phone || ""}
-                onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, phone: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -159,14 +207,20 @@ const UserManagement = () => {
               <Form.Control
                 type="text"
                 value={currentUser.address || ""}
-                onChange={(e) => setCurrentUser({ ...currentUser, address: e.target.value })}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, address: e.target.value })
+                }
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>Hủy</Button>
-          <Button variant="primary" onClick={handleEdit}>Cập nhật</Button>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Hủy
+          </Button>
+          <Button variant="primary" onClick={handleEdit}>
+            Cập nhật
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>

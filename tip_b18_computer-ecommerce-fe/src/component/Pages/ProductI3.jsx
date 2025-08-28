@@ -13,6 +13,8 @@ import {
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Css/productI.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductI3 = () => {
   const [products, setProducts] = useState([]);
@@ -59,9 +61,18 @@ const ProductI3 = () => {
   }, [products, sortOption]);
 
   const addToCart = (product) => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser) {
-      alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    let currentUser;
+    try {
+      const userData = JSON.parse(localStorage.getItem("currentUser"));
+      currentUser = userData?.data || userData;
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    if (!currentUser?.id) {
+      toast.warning("Vui lòng đăng nhập lại!");
       return;
     }
 
@@ -73,12 +84,18 @@ const ProductI3 = () => {
 
     axiosInstance
       .post("/carts/add", cartItem)
-      .then(() => {
-        alert(`${product.name} đã thêm vào giỏ hàng!`);
+      .then((response) => {
+        // Kiểm tra response.data tồn tại trước
+        if (response.data) {
+          toast.success(`${product.name} đã thêm vào giỏ hàng!`);
+          window.dispatchEvent(new Event("cartUpdated"));
+        } else {
+          toast.error("Thêm vào giỏ hàng thất bại");
+        }
       })
       .catch((error) => {
         console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại!");
+        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
       });
   };
 
@@ -118,14 +135,21 @@ const ProductI3 = () => {
                 <div className="image-container">
                   {!imageLoaded[product.id] && (
                     <div className="image-placeholder">
-                      <Spinner animation="border" variant="secondary" size="sm" />
+                      <Spinner
+                        animation="border"
+                        variant="secondary"
+                        size="sm"
+                      />
                     </div>
                   )}
                   <Card.Img
                     variant="top"
                     src={product.thumbnail || product.image || placeholderImage}
                     onLoad={() =>
-                      setImageLoaded((prev) => ({ ...prev, [product.id]: true }))
+                      setImageLoaded((prev) => ({
+                        ...prev,
+                        [product.id]: true,
+                      }))
                     }
                     className={`product-image ${
                       imageLoaded[product.id] ? "loaded" : "loading"
@@ -144,7 +168,7 @@ const ProductI3 = () => {
                       addToCart(product);
                     }}
                     className="w-100"
-                    style={{margin:"auto"}}
+                    style={{ margin: "auto" }}
                   >
                     Thêm vào giỏ
                   </Button>
@@ -175,6 +199,11 @@ const ProductI3 = () => {
           />
         </Pagination>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        closeButton={false}
+      />
     </Container>
   );
 };

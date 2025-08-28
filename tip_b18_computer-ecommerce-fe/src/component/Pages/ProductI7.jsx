@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Author/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import {Container, Row, Col, Card, Button, Pagination, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Pagination,
+  Form,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductI7 = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +25,9 @@ const ProductI7 = () => {
 
   useEffect(() => {
     axiosInstance
-      .get(`/products/getAllProducts?page=${page}&size=100&sort=false&sortBy=name`)
+      .get(
+        `/products/getAllProducts?page=${page}&size=100&sort=false&sortBy=name`
+      )
       .then((res) => {
         const i5Products = res.data.filter((p) =>
           p.name.toLowerCase().includes("i7")
@@ -45,9 +57,18 @@ const ProductI7 = () => {
   }, [products, sortOption]);
 
   const addToCart = (product) => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser) {
-      alert("Bạn cần đăng nhập trước khi thêm vào giỏ hàng!");
+    let currentUser;
+    try {
+      const userData = JSON.parse(localStorage.getItem("currentUser"));
+      currentUser = userData?.data || userData;
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    if (!currentUser?.id) {
+      toast.warning("Vui lòng đăng nhập lại!");
       return;
     }
 
@@ -57,13 +78,19 @@ const ProductI7 = () => {
       quantity: 1,
     };
 
-    axiosInstance.post("/carts/add", cartItem)
-      .then(() => {
-        alert(`${product.name} đã thêm vào giỏ hàng!`);
+    axiosInstance
+      .post("/carts/add", cartItem)
+      .then((response) => {
+        if (response.data) {
+          toast.success(`${product.name} đã thêm vào giỏ hàng!`);
+          window.dispatchEvent(new Event("cartUpdated"));
+        } else {
+          toast.error("Thêm vào giỏ hàng thất bại");
+        }
       })
       .catch((error) => {
         console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại!");
+        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
       });
   };
 
@@ -79,7 +106,7 @@ const ProductI7 = () => {
             value={sortOption}
             onChange={(e) => {
               setSortOption(e.target.value);
-              setPage(1); // reset về trang đầu khi sắp xếp lại
+              setPage(1);
             }}
           >
             <option value="name">Sắp xếp theo tên (A-Z)</option>
@@ -125,7 +152,10 @@ const ProductI7 = () => {
 
       <div className="d-flex justify-content-center">
         <Pagination>
-          <Pagination.Prev onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} />
+          <Pagination.Prev
+            onClick={() => setPage(Math.max(1, page - 1))}
+            disabled={page === 1}
+          />
           {[...Array(totalPages)].map((_, i) => (
             <Pagination.Item
               key={i + 1}
@@ -135,9 +165,17 @@ const ProductI7 = () => {
               {i + 1}
             </Pagination.Item>
           ))}
-          <Pagination.Next onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} />
+          <Pagination.Next
+            onClick={() => setPage(Math.min(totalPages, page + 1))}
+            disabled={page === totalPages}
+          />
         </Pagination>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        closeButton={false}
+      />
     </Container>
   );
 };

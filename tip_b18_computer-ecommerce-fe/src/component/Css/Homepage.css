@@ -1,148 +1,140 @@
 * {
-    padding: 0;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 :root {
-    --primary-color: #e50000;
-    --secondary-color: #b30000;
-    --accent-color: #ff3333;
-    --light-color: #ffffff;
-    --dark-color: #990000;
+  --primary-color: #e50000;
+  --secondary-color: #b30000;
+  --accent-color: #ff3333;
+  --light-color: #ffffff;
+  --dark-color: #990000;
 }
 
 .PageHm {
-    position: relative;
-    display: block;
-    justify-content: center;
+  position: relative;
+  display: block;
+  justify-content: center;
 }
 
-.header{
-    width: 100%;
-    height: 70px;
-    top: 0;
-    display: block;
-    position: sticky;
-    justify-content: center;
-    align-items: center;
-    background-color: #E31B1B;
-    z-index: 10;
-    box-sizing: border-box;
+.header {
+  width: 100%;
+  height: 70px;
+  top: 0;
+  display: block;
+  position: sticky;
+  justify-content: center;
+  align-items: center;
+  background-color: #e31b1b;
+  z-index: 10;
+  box-sizing: border-box;
 }
 
 .signature {
-    color: #020101;
-    font-size: 50px;
-    text-shadow:
-      0 0 5px #ff003c,
-      0 0 10px #ff003c,
-      0 0 20px #ff003c,
-      0 0 40px #ff003c,
-      0 0 80px #ff003c;
-  }
-  
-.swiper-slide{
-    margin-right: -20px; 
-    margin-left: 20px;
+  color: #020101;
+  font-size: 50px;
+  text-shadow: 0 0 5px #ff003c, 0 0 10px #ff003c, 0 0 20px #ff003c,
+    0 0 40px #ff003c, 0 0 80px #ff003c;
+}
+
+.swiper-slide {
+  margin-right: -20px;
+  margin-left: 20px;
 }
 
 .brand {
-    font-size: 32px;
-    color: white;
-    margin-left: 2%;
-    text-decoration: none ;
+  font-size: 32px;
+  color: white;
+  margin-left: 2%;
+  text-decoration: none;
 }
 
-
-.slideshow{
-    display: block; 
-    height: 600px;
+.slideshow {
+  display: block;
+  height: 600px;
 }
 
 .slideshow img {
-    width: 100%;
-    height: 500px;
+  width: 100%;
+  height: 500px;
 }
 
-  .button-hover:hover {
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
-  }
+.button-hover:hover {
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+}
 
 .carousel-control-prev-icon,
-.carousel-control-next-icon{
-    display: none;
+.carousel-control-next-icon {
+  display: none;
 }
 
-.itm{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; 
-    width: 100px;
-    height: 100px;
-    background-color: #fde3ee;
-    border-radius: 50px;
+.itm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  background-color: #fde3ee;
+  border-radius: 50px;
 }
 
 .icon > p {
-    text-align: center;
+  text-align: center;
 }
 
 .row {
-    font-size: 24px;
+  font-size: 24px;
 }
 
-h5{
-    font-size: 1rem;
+h5 {
+  font-size: 1rem;
 }
 
 #card {
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 #card:hover {
-    transform: translateY(-10px);
-    border-color: var(--primary-color);
-    box-shadow: 0 10px 25px rgba(137, 41, 41, 0.2);
-} 
+  transform: translateY(-10px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 25px rgba(137, 41, 41, 0.2);
+}
 
 .card-img-top {
-    width: 75%;
+  width: 75%;
 }
 
 .btncard {
-    width: 90%;
-    height: 54px;
-    background-color: #E07008 ;
-    border-radius: 10px;
-    font-size: 15px;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    color: white;
-    margin-left: 10px;
-    border: none;
+  width: 90%;
+  height: 54px;
+  background-color: #e07008;
+  border-radius: 10px;
+  font-size: 15px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  color: white;
+  margin-left: 10px;
+  border: none;
 }
 
-.btncard:hover{
-    transform: scale(1.05);
-    color: #7C7979;
+.btncard:hover {
+  transform: scale(1.05);
+  color: #7c7979;
 }
 
 .bar > li :hover {
-    display: block;
+  display: block;
 }
 
 .swiper-button-prev,
 .swiper-button-next {
-    font-size: 20px; /* Thu nhỏ icon nếu là font icon */
-    width: 25px;
-    height: 25px;
-    transform: scale(0.7);
+  display: none;
 }

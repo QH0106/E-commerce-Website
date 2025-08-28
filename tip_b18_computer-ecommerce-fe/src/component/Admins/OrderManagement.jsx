@@ -27,6 +27,8 @@ const OrderManagement = () => {
   const [filterPaymentStatus, setFilterPaymentStatus] = useState("");
   const [show, setShow] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [showDetail, setShowDetail] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 10;
 
@@ -76,6 +78,34 @@ const OrderManagement = () => {
     indexOfLastOrder - ordersPerPage,
     indexOfLastOrder
   );
+
+  const handleDetail = (orderId) => {
+    setShowDetail(true);
+    setOrderDetails(null);
+
+    axiosInstance
+      .get(`/orders/admin/${orderId}`)
+      .then((res) => {
+        if (res.data && res.data.data && res.data.data.items) {
+          const items = res.data.data.items.map((item) => ({
+            productId: item.productId,
+            productName: item.productName,
+            thumbnail: item.thumbnail,
+            quantity: item.quantity,
+            price: item.unitPrice,
+            totalPrice: item.totalPrice,
+          }));
+          setOrderDetails(items);
+        } else {
+          throw new Error("Invalid response format");
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
+        alert("Không thể lấy chi tiết đơn hàng");
+        setShowDetail(false);
+      });
+  };
 
   return (
     <Container>
@@ -135,7 +165,7 @@ const OrderManagement = () => {
         </thead>
         <tbody style={{ textAlign: "center" }}>
           {currentOrders.map((order) => (
-            <tr key={order.orderId}>
+            <tr key={order.orderId} style={{ verticalAlign: "middle" }}>
               <td>{order.userEmail}</td>
               <td>{order.shippingAddress}</td>
               <td>{order.orderId}</td>
@@ -146,10 +176,17 @@ const OrderManagement = () => {
               <td>
                 <Button
                   variant="warning"
-                  style={{ margin: "auto" }}
+                  style={{ margin: "auto", marginBottom: "5px" }}
                   onClick={() => handleOpenModal(order)}
                 >
-                  <FaEdit /> Cập nhật
+                  Cập nhật
+                </Button>
+                <Button
+                  variant="success"
+                  onClick={() => handleDetail(order.orderId)}
+                  style={{ margin: "auto" }}
+                >
+                  Chi tiết
                 </Button>
               </td>
             </tr>
@@ -241,6 +278,89 @@ const OrderManagement = () => {
           </Button>
           <Button variant="primary" onClick={handleStatusUpdate}>
             Cập nhật
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showDetail} onHide={() => setShowDetail(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Chi tiết đơn hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {orderDetails === null ? (
+            <div className="text-center py-3">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Đang tải...</span>
+              </div>
+            </div>
+          ) : orderDetails.length > 0 ? (
+            <>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>Hình ảnh</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderDetails.map((item) => (
+                    <tr key={item.productId}>
+                      <td>{item.productName}</td>
+                      <td className="text-center">
+                        {item.thumbnail ? (
+                          <img
+                            src={item.thumbnail}
+                            alt={item.productName}
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : (
+                          <span className="text-muted">Không có ảnh</span>
+                        )}
+                      </td>
+                      <td className="text-center">{item.quantity}</td>
+                      <td className="text-end">
+                        {Number(item.price).toLocaleString()} đ
+                      </td>
+                      <td className="text-end">
+                        {(Number(item.price) * item.quantity).toLocaleString()}{" "}
+                        đ
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan="4" className="text-end fw-bold">
+                      Tổng cộng:
+                    </td>
+                    <td className="text-end fw-bold">
+                      {orderDetails
+                        .reduce(
+                          (sum, item) =>
+                            sum + Number(item.price) * item.quantity,
+                          0
+                        )
+                        .toLocaleString()}{" "}
+                      đ
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </>
+          ) : (
+            <div className="text-center py-3">
+              <p>Không có dữ liệu chi tiết đơn hàng</p>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDetail(false)}>
+            Đóng
           </Button>
         </Modal.Footer>
       </Modal>
