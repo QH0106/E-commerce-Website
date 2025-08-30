@@ -89,11 +89,6 @@ const OrderManagement = () => {
 
       // Lưu toàn bộ thông tin order
       setOrderInfo({
-        orderId: data.orderId,
-        userEmail: data.userEmail,
-        createdAt: data.createdAt,
-        orderStatus: data.orderStatus,
-        paymentStatus: data.paymentStatus,
         shippingAddress: data.shippingAddress,
         note: data.note,
         totalAmount: data.totalAmount,
@@ -103,9 +98,10 @@ const OrderManagement = () => {
       const mapItems = (data.items ?? []).map((item) => ({
         productId: item.productId,
         productName: item.productName,
+        thumbnail: item.thumbnail,
         quantity: item.quantity,
         price: item.unitPrice,
-        thumbnail: item.thumbnail,
+        totalPrice: item.totalPrice,
       }));
       setOrderDetails(mapItems);
 

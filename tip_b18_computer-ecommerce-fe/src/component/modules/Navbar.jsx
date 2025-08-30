@@ -62,7 +62,8 @@ const Navbar = () => {
     const fetchCart = async () => {
       const currentUserRaw = JSON.parse(localStorage.getItem("currentUser"));
       const token = localStorage.getItem("token");
-      const currentUser = currentUserRaw && currentUserRaw.data ? currentUserRaw.data : null;
+      const currentUser =
+        currentUserRaw && currentUserRaw.data ? currentUserRaw.data : null;
 
       if (!currentUser || !token || !currentUser.id) {
         setTotalQuantity(0);
@@ -70,10 +71,15 @@ const Navbar = () => {
       }
 
       try {
-        const response = await axiosInstance.get(`/carts/getCartByUserId/${currentUser.id}`);
+        const response = await axiosInstance.get(
+          `/carts/getCartByUserId/${currentUser.id}`
+        );
         const cartData = response.data.data || response.data;
         const cartItems = cartData.cartDetails || [];
-        const total = cartItems.reduce((total, item) => total + item.quantity, 0);
+        const total = cartItems.reduce(
+          (total, item) => total + item.quantity,
+          0
+        );
         setTotalQuantity(total);
       } catch (error) {
         console.error("Lỗi khi lấy giỏ hàng:", error);
@@ -86,10 +92,10 @@ const Navbar = () => {
     const handleCartUpdate = () => {
       fetchCart();
     };
-    window.addEventListener('cartUpdated', handleCartUpdate);
+    window.addEventListener("cartUpdated", handleCartUpdate);
 
     return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, []);
 
@@ -129,7 +135,11 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-danger px-3 navbar-sticky">
-      <a className="navbar-brand fw-bold" href="/HomePage" style={{ marginLeft: "100px", fontSize: "25px" }}>
+      <a
+        className="navbar-brand fw-bold"
+        href="/HomePage"
+        style={{ marginLeft: "100px", fontSize: "25px" }}
+      >
         ComputerShop
       </a>
 
@@ -141,67 +151,137 @@ const Navbar = () => {
         aria-controls="mainNavbar"
         aria-expanded="false"
         aria-label="Toggle navigation"
-        style={{margin:"auto"}}
+        style={{ margin: "auto" }}
       >
         <span className="navbar-toggler-icon"></span>
       </button>
 
       <div className="collapse navbar-collapse" id="mainNavbar">
-        <ul className="navbar-nav me-auto mb-2 mb-lg-0" style={{ margin: "auto", gap: "20px" }}>
-          
+        <ul
+          className="navbar-nav me-auto mb-2 mb-lg-0"
+          style={{ margin: "auto", gap: "20px" }}
+        >
           <li className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="/ProDuct" id="pcDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a
+              className="nav-link dropdown-toggle"
+              href="/ProDuct"
+              id="pcDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               PC
             </a>
             <ul className="dropdown-menu" aria-labelledby="pcDropdown">
-              <li><a className="dropdown-item" href="/ProDuct">Tất cả sản phẩm</a></li>
-              <li><a className="dropdown-item" href="/ProductI3">PC I3</a></li>
-              <li><a className="dropdown-item" href="/ProductI5">PC I5</a></li>
-              <li><a className="dropdown-item" href="/ProductI7">PC I7</a></li>
+              <li>
+                <a className="dropdown-item" href="/ProDuct">
+                  Tất cả sản phẩm
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="/ProductI3">
+                  PC I3
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="/ProductI5">
+                  PC I5
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="/ProductI7">
+                  PC I7
+                </a>
+              </li>
             </ul>
           </li>
 
-          
           <li className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="#" id="laptopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              id="laptopDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               Laptop
             </a>
             <ul className="dropdown-menu" aria-labelledby="laptopDropdown">
-              <li><a className="dropdown-item" href="#">Laptop Gaming</a></li>
-              <li><a className="dropdown-item" href="#">Laptop Văn phòng</a></li>
-              <li><a className="dropdown-item" href="#">Laptop Sinh viên</a></li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Laptop Gaming
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Laptop Văn phòng
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Laptop Sinh viên
+                </a>
+              </li>
             </ul>
           </li>
 
-      
           <li className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="#" id="gearDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              id="gearDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               Gear
             </a>
             <ul className="dropdown-menu" aria-labelledby="gearDropdown">
-              <li><a className="dropdown-item" href="#">Chuột</a></li>
-              <li><a className="dropdown-item" href="#">Bàn phím</a></li>
-              <li><a className="dropdown-item" href="#">Tai nghe</a></li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Chuột
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Bàn phím
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Tai nghe
+                </a>
+              </li>
             </ul>
           </li>
         </ul>
 
         <div className="d-flex flex-column flex-lg-row align-items-center w-100">
-          <div className="me-lg-2 flex-grow-1 position-relative" ref={searchRef} style={{left:"10px"}}>
+          <div
+            className="me-lg-2 flex-grow-1 position-relative"
+            ref={searchRef}
+            style={{ left: "10px" }}
+          >
             <input
               className="form-control"
               type="search"
               placeholder="Tìm kiếm sản phẩm..."
               value={search}
               onChange={handleSearch}
-              
             />
             {suggestions.length > 0 && (
               <div className="search-suggestions bg-white">
                 {suggestions.map((item) => (
                   <div key={item.id} className="suggestion-item">
                     <a href={`/Detail/${item.id}`}>
-                      <img src={item.thumbnail} alt={item.name} width="40" height="40" style={{marginRight:"20px"}}/>
+                      <img
+                        src={item.thumbnail}
+                        alt={item.name}
+                        width="40"
+                        height="40"
+                        style={{ marginRight: "20px" }}
+                      />
                       <span>{item.name}</span>
                     </a>
                   </div>
@@ -211,23 +291,33 @@ const Navbar = () => {
           </div>
         </div>
 
-
         {/* Cart + User */}
-        <div className="d-flex align-items-center ms-2 gap-4" style={{ marginRight: "50px" }}>
-          <a href="/Cart" style={{ position: "relative", display: "inline-block" }}>
-            <i className="fa-solid fa-cart-shopping" style={{ fontSize: "25px", color: "white" }}></i>
+        <div
+          className="d-flex align-items-center ms-2 gap-4"
+          style={{ marginRight: "50px" }}
+        >
+          <a
+            href="/Cart"
+            style={{ position: "relative", display: "inline-block" }}
+          >
+            <i
+              className="fa-solid fa-cart-shopping"
+              style={{ fontSize: "25px", color: "white" }}
+            ></i>
             {totalQuantity > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '-8px',
-                right: '-8px',
-                backgroundColor: 'red',
-                color: 'white',
-                borderRadius: '50%',
-                padding: '2px 6px',
-                fontSize: '12px',
-                fontWeight: 'bold'
-              }}>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-8px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 6px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
                 {totalQuantity}
               </span>
             )}
@@ -242,20 +332,41 @@ const Navbar = () => {
                 aria-expanded="false"
                 style={{ cursor: "pointer" }}
               >
-                <i className="fa-regular fa-user me-2" style={{ fontSize: "25px", marginRight: "20px" }}></i>
+                <i
+                  className="fa-regular fa-user me-2"
+                  style={{ fontSize: "25px", marginRight: "20px" }}
+                ></i>
                 {username}
               </span>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><span className="dropdown-item-text"><a href="/ProfilePage">Xin chào, {username}</a></span></li>
-                <li><hr className="dropdown-divider" /></li>
+                <li>
+                  <span className="dropdown-item-text">
+                    <a href="/ProfilePage">Xin chào, {username}</a>
+                  </span>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
 
                 {isAdmin && (
-                  <li><a className="dropdown-item" href="/Admin">Vào trang quản trị</a></li>
+                  <li>
+                    <a className="dropdown-item" href="/Admin">
+                      Trang Admin
+                    </a>
+                  </li>
                 )}
 
-                <li><a className="dropdown-item" href="/PurchaseHistoryPage">Đơn hàng của tôi</a></li>
                 <li>
-                  <span className="dropdown-item" style={{ cursor: "pointer" }} onClick={handleLogout}>
+                  <a className="dropdown-item" href="/PurchaseHistoryPage">
+                    Đơn hàng của tôi
+                  </a>
+                </li>
+                <li>
+                  <span
+                    className="dropdown-item"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleLogout}
+                  >
                     Đăng xuất
                   </span>
                 </li>
@@ -263,7 +374,10 @@ const Navbar = () => {
             </div>
           ) : (
             <a href="/Login" className="text-white">
-              <i className="fa-solid fa-user" style={{ fontSize: "25px", marginRight: "20px" }}></i>
+              <i
+                className="fa-solid fa-user"
+                style={{ fontSize: "25px", marginRight: "20px" }}
+              ></i>
             </a>
           )}
         </div>

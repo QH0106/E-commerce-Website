@@ -107,6 +107,15 @@ h5 {
   box-shadow: 0 10px 25px rgba(137, 41, 41, 0.2);
 }
 
+.sales {
+  transition: all 0.3s ease-in-out;
+}
+.sales:hover {
+  transform: translateY(-10px);
+  border-color: gray;
+  box-shadow: 0 10px 25px rgba(137, 41, 41, 0.2);
+}
+
 .card-img-top {
   width: 75%;
 }

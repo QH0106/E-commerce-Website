@@ -313,9 +313,10 @@ const HomePage = () => {
                 key={product.name}
                 className="col-md-3"
                 style={{ fontSize: "15px" }}
+                title={product.name}
               >
                 <div
-                  className="card p-3"
+                  className="card p-3 sales"
                   style={{ backgroundColor: "#F8F4F4", marginTop: "10px" }}
                 >
                   <Link to={`/Detail/${product.id}`}>
@@ -361,7 +362,7 @@ const HomePage = () => {
       </div>
 
       <ToastContainer
-        position="top-center"
+        position="top-right"
         autoClose={1000}
         closeButton={false}
       />

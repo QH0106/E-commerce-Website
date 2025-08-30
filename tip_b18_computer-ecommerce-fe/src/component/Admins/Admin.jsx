@@ -53,23 +53,17 @@ const Sidebar = () => (
         </Link>
       </li>
       <li className="nav-item mt-auto" style={{ margin: "auto" }}>
-        <Button variant="warning" href="/Homepage">
+        <Button
+          variant="success"
+          href="/Homepage"
+          style={{ marginTop: "100px" }}
+        >
           Trang chủ
         </Button>
       </li>
     </ul>
   </div>
 );
-
-// Logout
-const LogoutButton = () => {
-  const { logout } = useContext(AuthContext);
-  return (
-    <Button variant="danger" onClick={logout}>
-      Đăng xuất
-    </Button>
-  );
-};
 
 // Admin Layout
 const AdminLayout = ({ children }) => (
@@ -156,7 +150,6 @@ const RevenueStatistics = () => {
   useEffect(() => {
     if (key === "top-products") fetchTopProducts();
     if (key === "revenue-week") fetchRevenueByWeek();
-    if (key === "revenue-date") fetchRevenueByDate();
   }, [key]);
 
   return (
@@ -166,7 +159,7 @@ const RevenueStatistics = () => {
         id="revenue-tabs"
         activeKey={key}
         onSelect={(k) => setKey(k)}
-        className="mb-3"
+        className="mb-3 admin-custom"
       >
         <Tab eventKey="top-products" title="Top sản phẩm bán chạy">
           {loading ? (
@@ -183,7 +176,7 @@ const RevenueStatistics = () => {
                 <YAxis dataKey="productName" type="category" width={150} />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="quantitySold" fill="#82ca9d" />
+                <Bar dataKey="quantitySold" fill="#82ca9d" name="Số Lượng" />
               </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -202,24 +195,7 @@ const RevenueStatistics = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="revenue" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </Tab>
-
-        <Tab eventKey="revenue-date" title="Doanh thu theo ngày">
-          {loading ? (
-            <Spinner animation="border" />
-          ) : (
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={revenueByDate}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="revenue" fill="#82ca9d" />
+                <Bar dataKey="revenue" fill="#8884d8" name="Doanh Thu" />
               </BarChart>
             </ResponsiveContainer>
           )}
