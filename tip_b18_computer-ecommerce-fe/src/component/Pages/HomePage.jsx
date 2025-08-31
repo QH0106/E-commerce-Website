@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Css/Homepage.css";
+import { Addtocart } from "./Addtocart";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -43,37 +44,37 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-  const addToCart = (product) => {
-    let currentUser;
-    try {
-      currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      return;
-    }
+  // const addToCart = (product) => {
+  //   let currentUser;
+  //   try {
+  //     currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  //   } catch (error) {
+  //     console.error("Lỗi khi lấy thông tin người dùng:", error);
+  //     return;
+  //   }
 
-    if (!currentUser) {
-      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
+  //   if (!currentUser) {
+  //     toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
+  //     return;
+  //   }
 
-    const cartItem = {
-      userId: currentUser.id,
-      productId: product.id,
-      quantity: 1,
-    };
+  //   const cartItem = {
+  //     userId: currentUser.id,
+  //     productId: product.id,
+  //     quantity: 1,
+  //   };
 
-    axiosInstance
-      .post("/carts/add", cartItem)
-      .then(() => {
-        toast.success(`${product.name} đã thêm vào giỏ hàng!`);
-        window.dispatchEvent(new Event("cartUpdated"));
-      })
-      .catch((error) => {
-        console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại!");
-      });
-  };
+  //   axiosInstance
+  //     .post("/carts/add", cartItem)
+  //     .then(() => {
+  //       toast.success(`${product.name} đã thêm vào giỏ hàng!`);
+  //       window.dispatchEvent(new Event("cartUpdated"));
+  //     })
+  //     .catch((error) => {
+  //       console.error("Lỗi khi thêm vào giỏ hàng:", error);
+  //       alert("Có lỗi xảy ra, vui lòng thử lại!");
+  //     });
+  // };
 
   return (
     <div className="PageHm">
@@ -273,7 +274,7 @@ const HomePage = () => {
                   </p>
                   <button
                     className="btncard"
-                    onClick={() => addToCart(product)}
+                    onClick={() => Addtocart(product)}
                   >
                     Thêm vào giỏ hàng
                   </button>
@@ -350,7 +351,7 @@ const HomePage = () => {
                   </p>
                   <button
                     className="btncard"
-                    onClick={() => addToCart(product)}
+                    onClick={() => Addtocart(product)}
                   >
                     Thêm vào giỏ hàng
                   </button>
