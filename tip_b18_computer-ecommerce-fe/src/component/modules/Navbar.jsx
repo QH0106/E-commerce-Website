@@ -131,6 +131,7 @@ const Navbar = () => {
     setIsLogin(false);
     setUsername("");
     setIsAdmin(false);
+    setTotalQuantity(0);
   };
 
   return (

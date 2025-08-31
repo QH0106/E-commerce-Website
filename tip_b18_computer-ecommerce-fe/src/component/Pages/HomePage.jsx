@@ -31,7 +31,7 @@ const HomePage = () => {
     const fetchProducts = async () => {
       try {
         const response = await axiosInstance.get(
-          "/products/getAllProducts?page=1&size=100"
+          "/products/getAllProducts?page=1&size=200"
         );
         setProducts(response.data);
       } catch (error) {
@@ -44,37 +44,10 @@ const HomePage = () => {
     fetchProducts();
   }, []);
 
-  // const addToCart = (product) => {
-  //   let currentUser;
-  //   try {
-  //     currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  //   } catch (error) {
-  //     console.error("Lỗi khi lấy thông tin người dùng:", error);
-  //     return;
-  //   }
-
-  //   if (!currentUser) {
-  //     toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-  //     return;
-  //   }
-
-  //   const cartItem = {
-  //     userId: currentUser.id,
-  //     productId: product.id,
-  //     quantity: 1,
-  //   };
-
-  //   axiosInstance
-  //     .post("/carts/add", cartItem)
-  //     .then(() => {
-  //       toast.success(`${product.name} đã thêm vào giỏ hàng!`);
-  //       window.dispatchEvent(new Event("cartUpdated"));
-  //     })
-  //     .catch((error) => {
-  //       console.error("Lỗi khi thêm vào giỏ hàng:", error);
-  //       alert("Có lỗi xảy ra, vui lòng thử lại!");
-  //     });
-  // };
+  const productsI3 = [...products].filter((p) =>
+    p.name.toLowerCase().includes("son")
+  );
+  // Log để kiểm tra kết quả lọc
 
   return (
     <div className="PageHm">
@@ -209,6 +182,59 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Sản phẩm Mô Hình */}
+      <div className="Pd" style={{ justifyItems: "center" }}>
+        <div className="container row mt-3">
+          <h2
+            className="border-bottom border-secondary"
+            style={{ textAlign: "center", marginBottom: "50px" }}
+          >
+            Mô Hình
+          </h2>
+          {loading ? (
+            <div
+              style={{ height: "100px" }}
+              className="d-flex justify-content-center align-items-center"
+            >
+              <div className="spinner-border text-wanning" role="status">
+                <span className="visually-hidden"></span>
+              </div>
+            </div>
+          ) : (
+            productsI3.slice(0, 8).map((product) => (
+              <div key={product.id} className="col-md-3 mb-3">
+                <div
+                  className="card p-3 sales"
+                  style={{ backgroundColor: "#F8F4F4", cursor: "pointer" }}
+                >
+                  <Link to={`/Detail/${product.id}`}>
+                    <img
+                      className="card-img-top"
+                      src={product.thumbnail || product.image || "/unnamed.png"}
+                      alt={product.name}
+                      style={{ margin: "auto", width: "100%" }}
+                    />
+                  </Link>
+                  <h5 className="p-2 fs-5">{product.name}</h5>
+                  <p style={{ color: "red" }}>
+                    Giá: {product.price.toLocaleString("vi-VN")}₫
+                  </p>
+                  <button
+                    className="btncard"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      Addtocart(product);
+                    }}
+                  >
+                    Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
       {/* Sản phẩm nổi bật */}
       <div className="container mt-3">
         <h2
@@ -285,7 +311,6 @@ const HomePage = () => {
         )}
       </div>
 
-      {/* Sản phẩm khuyến mãi */}
       <div className="container mt-3">
         <h2
           className="signature border-bottom border-secondary"
@@ -296,7 +321,7 @@ const HomePage = () => {
           }}
           data-aos="fade-up"
         >
-          Sản phẩm{" "}
+          Sản phẩm mới
         </h2>
         {loading ? (
           <div

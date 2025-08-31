@@ -70,7 +70,7 @@ const CartPage = () => {
     );
   };
 
-  const handleRemoveItem = (cartItemId) => {
+  const handleRemoveItem = (cartItemId, productname) => {
     const confirmDelete = window.confirm(
       "Bạn có chắc chắn muốn xóa sản phẩm này không?"
     );
@@ -80,7 +80,7 @@ const CartPage = () => {
       .then(() => {
         setCart(cart.filter((item) => item.cartItemId !== cartItemId));
         window.dispatchEvent(new Event("cartUpdated"));
-        toast.success("Đã xóa sản phẩm khỏi giỏ hàng!");
+        toast.success(`Đã xóa ${productname} khỏi giỏ hàng!`);
       })
       .catch((error) => {
         console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
@@ -335,7 +335,7 @@ const CartPage = () => {
                   variant="link"
                   className="text-danger"
                   style={{ margin: "auto" }}
-                  onClick={() => handleRemoveItem(item.cartItemId)}
+                  onClick={() => handleRemoveItem(item.cartItemId, item.name)}
                 >
                   <i className="fa-solid fa-trash"></i>
                 </Button>

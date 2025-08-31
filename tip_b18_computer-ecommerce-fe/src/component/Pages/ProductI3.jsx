@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../Css/productI.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Addtocart } from "./Addtocart";
 
 const ProductI3 = () => {
   const [products, setProducts] = useState([]);
@@ -59,45 +60,6 @@ const ProductI3 = () => {
     setSortedProducts(sorted);
     setTotalPages(Math.ceil(sorted.length / pageSize));
   }, [products, sortOption]);
-
-  const addToCart = (product) => {
-    let currentUser;
-    try {
-      const userData = JSON.parse(localStorage.getItem("currentUser"));
-      currentUser = userData?.data || userData;
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
-
-    if (!currentUser?.id) {
-      toast.warning("Vui lòng đăng nhập lại!");
-      return;
-    }
-
-    const cartItem = {
-      userId: currentUser.id,
-      productId: product.id,
-      quantity: 1,
-    };
-
-    axiosInstance
-      .post("/carts/add", cartItem)
-      .then((response) => {
-        // Kiểm tra response.data tồn tại trước
-        if (response.data) {
-          toast.success(`${product.name} đã thêm vào giỏ hàng!`);
-          window.dispatchEvent(new Event("cartUpdated"));
-        } else {
-          toast.error("Thêm vào giỏ hàng thất bại");
-        }
-      })
-      .catch((error) => {
-        console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
-      });
-  };
 
   const handleClick = (id) => navigate(`/Detail/${id}`);
 
@@ -165,7 +127,7 @@ const ProductI3 = () => {
                     variant="danger"
                     onClick={(e) => {
                       e.stopPropagation();
-                      addToCart(product);
+                      Addtocart(product);
                     }}
                     className="w-100"
                     style={{ margin: "auto" }}

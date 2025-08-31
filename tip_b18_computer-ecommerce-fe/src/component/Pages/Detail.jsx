@@ -22,6 +22,7 @@ import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/src/styles.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Addtocart } from "./Addtocart";
 
 const ProductDetail = () => {
   const [key, setKey] = useState("description");
@@ -33,6 +34,8 @@ const ProductDetail = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     axiosInstance
       .get(`/products/getById/${id}`)
       .then((response) => {
@@ -78,43 +81,11 @@ const ProductDetail = () => {
     arrows: true,
   };
 
-  const addToCart = (product) => {
-    let currentUser;
-    try {
-      const userData = JSON.parse(localStorage.getItem("currentUser"));
-      currentUser = userData?.data || userData;
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
-
-    if (!currentUser?.id) {
-      toast.warning("Vui lòng đăng nhập lại!");
-      return;
-    }
-
-    const cartItem = {
-      userId: currentUser.id,
-      productId: product.id,
-      quantity: quantity,
-    };
-
-    axiosInstance
-      .post("/carts/add", cartItem)
-      .then((response) => {
-        if (response.data) {
-          toast.success(`${product.name} đã thêm ${quantity} sản phẩm`);
-          window.dispatchEvent(new Event("cartUpdated"));
-          setQuantity(1);
-        } else {
-          toast.error("Thêm vào giỏ hàng thất bại");
-        }
-      })
-      .catch((error) => {
-        console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
-      });
+  const responsiveImageStyle = {
+    width: "100%",
+    height: "auto",
+    maxWidth: "500px",
+    margin: "0 auto",
   };
 
   if (!product) {
@@ -131,20 +102,48 @@ const ProductDetail = () => {
   }
 
   return (
-    <Container className="py-5">
-      <Row style={{ marginLeft: "100px", marginTop: "50px" }}>
-        <Col md={5}>
-          <Row className="mx-auto">
+    <Container fluid className="py-3 py-md-5">
+      <Row className="border border-secondary p-2 p-md-4 mx-1 mx-md-5">
+        {/* Cột hình ảnh */}
+        <Col xs={12} md={5} className="mb-4 mb-md-0">
+          <Row
+            className="mx-auto border border-secondary rounded-3 p-2 p-md-4"
+            style={{
+              maxWidth: "500px",
+              height: "auto",
+              aspectRatio: "1",
+            }}
+          >
             <InnerImageZoom
               src={mainImage}
               zoomSrc={mainImage}
               zoomType="hover"
               zoomScale={1}
               alt={product.name}
+              style={responsiveImageStyle}
             />
           </Row>
-          <Row className="mt-3 gap-2">
-            <Slider {...sliderSettings} style={{ margin: "0 5px 0 5px" }}>
+
+          {/* Slider thumbnails */}
+          <Row className="mt-3">
+            <Slider
+              {...sliderSettings}
+              responsive={[
+                {
+                  breakpoint: 768,
+                  settings: {
+                    slidesToShow: 3,
+                  },
+                },
+                {
+                  breakpoint: 480,
+                  settings: {
+                    slidesToShow: 2,
+                  },
+                },
+              ]}
+              style={{ margin: "20px 5px 0 5px" }}
+            >
               {[product.thumbnail, ...(product.images || [])]
                 .filter(Boolean)
                 .map((img, index) => (
@@ -155,7 +154,12 @@ const ProductDetail = () => {
                       onClick={() => setMainImage(img)}
                       style={{
                         cursor: "pointer",
-                        // border: mainImage === img ? "1px solid orange" : "",
+                        border: "1px solid gray",
+                        height: "120px",
+                        width: "120px",
+                        objjectfit: "contain",
+                        objectposition: "center",
+                        backgroundColor: "#f9f9f9",
                       }}
                     />
                   </div>
@@ -163,29 +167,36 @@ const ProductDetail = () => {
             </Slider>
           </Row>
         </Col>
-        {/* <Col md={1}></Col> */}
-        <Col md={6} style={{ paddingLeft: "70px" }}>
-          <h4>{product.name}</h4>
-          <h5>Hãng: {product.brand}</h5>
-          <h5>Số lượng: {product.quantity}</h5>
-          <div className="mb-2">
-            <span style={{ color: "#ffc107" }}>★★★★★</span>{" "}
-            <span>{product.reviews?.length || 0} đánh giá</span>
-          </div>
-          <h3 className="text-danger">
-            {product.price
-              ? product.price.toLocaleString() + "₫"
-              : "Đang cập nhật"}
-          </h3>
 
-          <Form.Group as={Row} className="align-items-center">
-            <Form.Label column sm="3">
+        {/* Cột thông tin sản phẩm */}
+        <Col xs={12} md={7} className="ps-2 ps-md-5">
+          <h4 className="mb-3">{product.name}</h4>
+          <h5 className="mb-2">Hãng: {product.brand}</h5>
+          <h5 className="mb-2">Số lượng: {product.quantity}</h5>
+
+          {/* Giá và đánh giá */}
+          <div className="d-flex flex-column flex-md-row align-items-md-center gap-2 mb-3">
+            <h3 className="text-danger mb-0">
+              {product.price
+                ? product.price.toLocaleString() + "₫"
+                : "Đang cập nhật"}
+            </h3>
+            <div className="ms-md-3">
+              <span style={{ color: "#ffc107" }}>★★★★★</span>
+              <span className="ms-2">
+                {product.reviews?.length || 0} đánh giá
+              </span>
+            </div>
+          </div>
+
+          {/* Số lượng và nút thêm vào giỏ */}
+          <Form.Group as={Row} className="align-items-center mb-3">
+            <Form.Label column xs={4} md={3}>
               Số lượng
             </Form.Label>
-            <Col sm="9">
+            <Col xs={8} md={9}>
               <Form.Control
                 type="number"
-                defaultValue={1}
                 value={quantity}
                 min={1}
                 style={{ width: "80px" }}
@@ -194,29 +205,23 @@ const ProductDetail = () => {
             </Col>
           </Form.Group>
 
-          <ButtonGroup className="mt-3">
-            <Button
-              className="px-4 py-2"
-              onClick={() => addToCart(product)}
-              style={{
-                backgroundColor: "#E07008",
-                width: "330px",
-                borderRadius: "20px",
-              }}
-            >
-              Thêm vào giỏ hàng
-            </Button>
-          </ButtonGroup>
+          <Button
+            className="w-100 w-md-auto px-4 py-2 mb-3"
+            onClick={() => Addtocart(product, quantity)}
+            style={{
+              backgroundColor: "#E07008",
+              maxWidth: "330px",
+              borderRadius: "20px",
+            }}
+          >
+            Thêm vào giỏ hàng
+          </Button>
 
-          <ul className="mt-4">
-            {product.promotions?.map((promo, index) => (
-              <li key={index}>{promo}</li>
-            ))}
-          </ul>
-
+          {/* Ưu đãi */}
           <div className="mt-4">
-            <h4>ƯU ĐÃI KHI MUA KÈM PC:</h4>
-            <p className="fs-6">
+            <h4 className="h5">ƯU ĐÃI KHI MUA KÈM PC:</h4>
+            <div className="fs-6 ps-2">
+              {/* ...existing promotions code... */}
               "MÁY BỘ STAR HIỆU SUẤT CAO GIÁ SIÊU HỜI" Tại đây Đến 31.12.2025
               <br />
               TẶNG BỘ QUÀ Trị giá 220.000đ Tại đây gồm:
@@ -236,12 +241,13 @@ const ProductDetail = () => {
               Miễn phí vận chuyển lên đến 100k Tại đây
               <br />
               Miễn phí lắp đặt cài đặt Tại đây
-            </p>
+            </div>
           </div>
         </Col>
       </Row>
 
-      <Row className="mt-5">
+      {/* Tabs section */}
+      <Row className="mt-4 mx-1 mx-md-5">
         <Col>
           <Tabs
             id="product-tabs"
@@ -307,20 +313,23 @@ const ProductDetail = () => {
         </Col>
       </Row>
 
-      <Row className="mt-5">
-        <h4>Sản phẩm cùng thương hiệu</h4>
+      {/* Related products */}
+      <Row className="mt-4 mx-1 mx-md-5">
+        <h4 className="mb-3">Sản phẩm cùng thương hiệu</h4>
         {relatedProducts.map((p) => (
-          <Col md={2} key={p.id} className="mb-6">
+          <Col xs={6} sm={4} md={3} lg={2} key={p.id} className="mb-3">
             <Card
               onClick={() => (window.location.href = `/Detail/${p.id}`)}
               style={{ cursor: "pointer" }}
             >
               <Card.Img
-                variant="top mx-auto my-auto pt-2"
+                variant="top"
                 src={p.thumbnail || p.image}
+                className="p-2"
+                style={{ aspectRatio: "1", objectFit: "contain" }}
               />
               <Card.Body>
-                <Card.Title>{p.name}</Card.Title>
+                <Card.Title className="h6">{p.name}</Card.Title>
                 <Card.Text className="text-danger">
                   {p.price.toLocaleString()}₫
                 </Card.Text>

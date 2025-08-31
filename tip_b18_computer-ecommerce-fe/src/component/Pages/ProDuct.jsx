@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Carousel } from "react-bootstrap";
 import "../Css/ProDuct.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Addtocart } from "./Addtocart";
 import "react-toastify/dist/ReactToastify.css";
 
 const ProDuct = () => {
@@ -14,7 +15,7 @@ const ProDuct = () => {
 
   useEffect(() => {
     axiosInstance
-      .get("/products/getAllProducts?page=1&size=100")
+      .get("/products/getAllProducts?page=1&size=200")
       .then((response) => {
         setProducts(response.data);
       })
@@ -22,39 +23,6 @@ const ProDuct = () => {
         console.error("Lỗi khi lấy sản phẩm:", error);
       });
   }, []);
-
-  const addToCart = (product) => {
-    let currentUser;
-    try {
-      currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
-
-    if (!currentUser) {
-      toast.warning("Đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
-
-    const cartItem = {
-      userId: currentUser.id,
-      productId: product.id,
-      quantity: 1,
-    };
-
-    axiosInstance
-      .post("/carts/add", cartItem)
-      .then(() => {
-        toast.success(`${product.name} đã thêm vào giỏ hàng!`);
-        window.dispatchEvent(new Event("cartUpdated"));
-      })
-      .catch((error) => {
-        console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra, vui lòng thử lại!");
-      });
-  };
 
   const filteredProducts = [...products].sort((a, b) =>
     sort === "asc" ? a.price - b.price : b.price - a.price
@@ -150,7 +118,7 @@ const ProDuct = () => {
                   className="btn btn-danger"
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToCart(product);
+                    Addtocart(product);
                   }}
                 >
                   Thêm vào giỏ hàng
@@ -195,7 +163,7 @@ const ProDuct = () => {
                   className="btn btn-danger"
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToCart(product);
+                    Addtocart(product);
                   }}
                 >
                   Thêm vào giỏ hàng
@@ -240,7 +208,7 @@ const ProDuct = () => {
                   className="btn btn-danger"
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToCart(product);
+                    Addtocart(product);
                   }}
                 >
                   Thêm vào giỏ hàng
@@ -285,7 +253,7 @@ const ProDuct = () => {
                   className="btn btn-danger"
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToCart(product);
+                    Addtocart(product);
                   }}
                 >
                   Thêm vào giỏ hàng
